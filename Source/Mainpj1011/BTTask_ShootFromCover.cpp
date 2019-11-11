@@ -9,6 +9,7 @@
 UBTTask_ShootFromCover::UBTTask_ShootFromCover()
 {
 	NodeName = TEXT("ShootFromCover");
+	bNotifyTaskFinished = 1;
 }
 
 EBTNodeResult::Type UBTTask_ShootFromCover::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
@@ -19,31 +20,11 @@ EBTNodeResult::Type UBTTask_ShootFromCover::ExecuteTask(UBehaviorTreeComponent &
 	{
 		return EBTNodeResult::Failed;
 	}
-	if (Fireflag)
-	{
-		TPSEnemy->CStopShoothing();
-		TPSEnemy->SetTrueCoverState();
-		TPSEnemy->SetFalseAimState();
-		Fireflag = false;
-		Timerflag = true;
-		return EBTNodeResult::Succeeded;
-	}
 	else
 	{
 		TPSEnemy->SetFalseCoverState();
 		TPSEnemy->SetTrueAimState();
 		TPSEnemy->CStartShooting();
-		if (Timerflag)
-		{
-			UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-			if (GameInstance == nullptr)
-			{
-				return EBTNodeResult::Failed;
-			}
-			GameInstance->GetTimerManager().SetTimer(GameInstance->AICoverShotTimer, this, &UBTTask_ShootFromCover::SetTrueStopFire, 1.0, false, 3.0f);
-			Timerflag = false;
-		}
-
 		return EBTNodeResult::InProgress;
 	}
 }
@@ -64,8 +45,28 @@ EBTNodeResult::Type UBTTask_ShootFromCover::AbortTask(UBehaviorTreeComponent & O
 	}
 }
 
-
-void UBTTask_ShootFromCover::SetTrueStopFire()
+void UBTTask_ShootFromCover::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
-	Fireflag = true;
+	if ((int32)DeltaSeconds % 500 >= 400)
+	{
+		this->ReturnSuccessFunc();
+	}
 }
+
+void UBTTask_ShootFromCover::OnTaskFinished(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, EBTNodeResult::Type TaskResult)
+{
+	FTimerManager TimeManager;
+	
+	if(TaskResult == EBTNodeResult::InProgress )
+	{
+		uint32 bNotifyTick = 1;
+	}
+}
+
+EBTNodeResult::Type UBTTask_ShootFromCover::ReturnSuccessFunc()
+{
+	uint32 bNotifyTick = 0;
+	return EBTNodeResult::Succeeded;
+}
+
+

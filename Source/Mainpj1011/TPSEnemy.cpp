@@ -103,22 +103,39 @@ void ATPSEnemy::Fire()
 
 		if (TempBullet != nullptr)
 		{
-			FVector FireVector = (TargetLoc - CurWeapon->FirePos->GetComponentLocation()).GetSafeNormal();
-			FRotator BulletRot = GetActorRotation();
-			BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
+			if (!Cast<ATPSAIController>(GetController())->CanSeePlayerAI)
+			{
+				FRotator BulletRot = GetActorRotation();
+				FVector FireVector = GetActorForwardVector();
+				BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
+				TempBullet->Damage = CurWeapon->Damage;
+				TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
+				TempBullet->SetActorRotation(BulletRot);
+				TempBullet->ProjectileMovement->Velocity = FireVector * 6000;
+				TempBullet->ProjectileMovement->Velocity.Z = (CurWeapon->FirePos->GetComponentLocation().Z - TargetLoc.Z);
+				TempBullet->SetActive(true);
+				TempBullet->BulletTrail->Activate(true);
+				//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
+			}
+			else
+			{
+				FRotator BulletRot = GetActorRotation();
+				FVector FireVector = (TargetLoc - CurWeapon->FirePos->GetComponentLocation()).GetSafeNormal();
+				BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
 
-			TempBullet->Damage = CurWeapon->Damage;
-			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
-			TempBullet->SetActorRotation(BulletRot);
-			TempBullet->ProjectileMovement->Velocity = FireVector * 6000;
-			TempBullet->SetActive(true);
-			TempBullet->BulletTrail->Activate(true);
-			//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
-			DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Red, false, 1.0f);
-
+				TempBullet->Damage = CurWeapon->Damage;
+				TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
+				TempBullet->SetActorRotation(BulletRot);
+				TempBullet->ProjectileMovement->Velocity = FireVector * 6000;
+				TempBullet->SetActive(true);
+				TempBullet->BulletTrail->Activate(true);
+				//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
+				DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Red, false, 1.0f);
+			}
 		}
 	}
 }
+
 
 void ATPSEnemy::SetTrueCoverState()
 {
