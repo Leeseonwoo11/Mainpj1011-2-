@@ -122,7 +122,6 @@ void ATPSEnemy::Fire()
 				FRotator BulletRot = GetActorRotation();
 				FVector FireVector = (TargetLoc - CurWeapon->FirePos->GetComponentLocation()).GetSafeNormal();
 				BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
-
 				TempBullet->Damage = CurWeapon->Damage;
 				TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 				TempBullet->SetActorRotation(BulletRot);
@@ -181,7 +180,11 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 	if (OtherComp->ComponentHasTag(FName("BULLET")))
 	{
 		Health -= 10;
-		Cast<ATPSAIController>(GetController())->SetFocus(TempCharacter);
+		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
+		if (AIController != nullptr)
+		{
+			AIController->SetFocus(TempCharacter);
+		}
 	}
 	if (Health <= 0)
 	{
