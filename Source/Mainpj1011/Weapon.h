@@ -45,5 +45,5 @@ public:
 	float RPM = 1;
 
 
-	EWeaponType WeaponType = EWeaponType::NoWeapon;
+	EWeaponType WeaponType;
 };

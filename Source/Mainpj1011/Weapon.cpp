@@ -11,6 +11,7 @@ AWeapon::AWeapon()
 	WeaponBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPONBODY"));
 	FirePos = CreateDefaultSubobject<USceneComponent>(TEXT("FIREPOS"));
 	FirePos->SetupAttachment(WeaponBody);
+	WeaponType = EWeaponType::NoWeapon;
 }
 
 // Called when the game starts or when spawned
