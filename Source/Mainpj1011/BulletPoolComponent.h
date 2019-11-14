@@ -24,7 +24,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	int32 PoolSize = 10;
+	int32 PoolSize = 20;
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<ABullet*> Bulletpool;

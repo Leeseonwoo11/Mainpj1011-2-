@@ -86,7 +86,7 @@ void ATPSEnemy::SetTrueFireState()
 
 void ATPSEnemy::preFire()
 {
-	float Fireduration = 60.0f / CurWeapon->RPM;
+	float Fireduration = 60.0f / (float)CurWeapon->RPM;
 	GetWorldTimerManager().SetTimer(FireSpeedTimer1, this, &ATPSEnemy::Fire, Fireduration, true);
 }
 
@@ -125,7 +125,7 @@ void ATPSEnemy::Fire()
 				TempBullet->Damage = CurWeapon->Damage;
 				TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 				TempBullet->SetActorRotation(BulletRot);
-				TempBullet->ProjectileMovement->Velocity = FireVector * 6000;
+				TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
 				TempBullet->SetActive(true);
 				TempBullet->BulletTrail->Activate(true);
 				//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
@@ -179,7 +179,7 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 {
 	if (OtherComp->ComponentHasTag(FName("BULLET")))
 	{
-		Health -= 10;
+		Health -= (float)Cast<ABullet>(OtherComp->GetOwner())->Damage;
 		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
 		if (AIController != nullptr)
 		{

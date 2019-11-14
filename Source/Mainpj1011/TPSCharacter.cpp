@@ -111,6 +111,9 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Weapon2", IE_Pressed, this, &ATPSCharacter::SetWeapon2);
 	PlayerInputComponent->BindAction("Weapon3", IE_Pressed, this, &ATPSCharacter::SetWeapon3);
 	PlayerInputComponent->BindAction("Covered", IE_Pressed, this, &ATPSCharacter::SetCover);
+	PlayerInputComponent->BindAction("DownKey", IE_Pressed, this, &ATPSCharacter::DownKeyPress);
+	PlayerInputComponent->BindAction("DownKey", IE_Released, this, &ATPSCharacter::DownKeyRelease);
+
 }
 void ATPSCharacter::SetCameraOption()
 {
@@ -197,7 +200,7 @@ void ATPSCharacter::preFire() //발사전에 준비
 		}
 		else if (WeaponSlot1->WeaponType == EWeaponType::AR)
 		{
-			float Fireduration = 60.0f/WeaponSlot1->RPM;
+			float Fireduration = 60.0f/ (float)WeaponSlot1->RPM;
 			GetWorldTimerManager().SetTimer(FireSpeedTimer,this,&ATPSCharacter::Fire,Fireduration, true);
 		}
 		break;
@@ -209,7 +212,7 @@ void ATPSCharacter::preFire() //발사전에 준비
 		}
 		else if (WeaponSlot2->WeaponType == EWeaponType::AR)
 		{
-			float Fireduration = 60.0f / WeaponSlot2->RPM;
+			float Fireduration = 60.0f / (float)WeaponSlot2->RPM;
 			GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
 		}
 		break;
@@ -243,7 +246,7 @@ void ATPSCharacter::Fire()
 			TempBullet->Damage = CurWeapon->Damage;
 			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 			TempBullet->SetActorRotation(BulletRot);
-			TempBullet->ProjectileMovement->Velocity = FireVector * 6000;
+			TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
 			TempBullet->SetActive(true);
 			TempBullet->BulletTrail->Activate(true);
 
@@ -264,13 +267,25 @@ void ATPSCharacter::SetTrueSprintState()
 {
 	if (!bAimState && !bFireState)
 	{
-		bSprintState = true;
-		SetFalseCoverState();
+		if (!IsDown)
+		{
+			bSprintState = true;
+			SetFalseCoverState();
+		}
 	}
 }
 void ATPSCharacter::SetFalseSprintState()
 {
 	bSprintState = false;
+}
+void ATPSCharacter::DownKeyPress()
+{
+	IsDown = true;
+	bSprintState = false;
+}
+void ATPSCharacter::DownKeyRelease()
+{
+	IsDown = false;
 }
 //무기교체상태 설정
 void ATPSCharacter::SetTrueChangeWeaponState()
@@ -374,12 +389,10 @@ void ATPSCharacter::SetWeapon3()
 //은엄폐상태 설정
 void ATPSCharacter::SetCover()
 {
-
 	if (bCovered == false)
 		SetTrueCoverState();
 	else
 		SetFalseCoverState();
-
 }
 
 void ATPSCharacter::SetFalseCoverState()

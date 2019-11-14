@@ -7,7 +7,7 @@
 ABullet::ABullet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	BulletBody = CreateDefaultSubobject<USphereComponent>(TEXT("BULLETBODY"));
 	BulletBody->ComponentTags.Add(TEXT("BULLET"));
 	BulletBody->SetCollisionProfileName(FName("Bullet"));
@@ -26,6 +26,7 @@ ABullet::ABullet()
 	BulletSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BULLETSPARK"));
 	BulletSpark->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 	BulletSpark->SetupAttachment(RootComponent);
+	BulletSpark->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
 
 	ConstructorHelpers::FObjectFinder<UParticleSystem>PS_SPARK(TEXT("/Game/MilitaryWeapDark/FX/P_Impact_Metal_Large_01"));
 	if (PS_SPARK.Succeeded())

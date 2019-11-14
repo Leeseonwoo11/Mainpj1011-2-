@@ -13,7 +13,7 @@ enum class ESkillType
 	NoSkillObj,
 	PulseDetector,
 	StickyBoom,
-	Supporter,
+	Support,
 	TrackingMines,
 };
 

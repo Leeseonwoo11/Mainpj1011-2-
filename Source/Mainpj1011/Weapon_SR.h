@@ -14,4 +14,6 @@ class MAINPJ1011_API AWeapon_SR : public AWeapon
 {
 	GENERATED_BODY()
 	AWeapon_SR();
+protected:
+	virtual void BeginPlay() override;
 };

@@ -2,6 +2,7 @@
 
 
 #include "Weapon_SR.h"
+#include "TableManager.h"
 
 AWeapon_SR::AWeapon_SR()
 {
@@ -14,4 +15,14 @@ AWeapon_SR::AWeapon_SR()
 	WeaponType = EWeaponType::SR;
 	FirePos->SetRelativeLocation(FVector(0.0f, 80.0f, 14.0f));
 	FirePos->SetRelativeRotation(FRotator(0, 90, 0));
+}
+void AWeapon_SR::BeginPlay()
+{
+	TableManager* TableMgr = TableManager::GetInstance();
+	Damage = TableMgr->GetWeaponDamage(WeaponType);
+	RPM = TableMgr->GetWeaponRPM(WeaponType);
+	AMMO = TableMgr->GetWeaponAMMO(WeaponType);
+	UE_LOG(LogTemp, Error, TEXT("Pistol RPM is %d"), RPM);
+	UE_LOG(LogTemp, Error, TEXT("Pistol DMG is %f"), Damage);
+	UE_LOG(LogTemp, Error, TEXT("Pistol AMMO is %d"), AMMO);
 }

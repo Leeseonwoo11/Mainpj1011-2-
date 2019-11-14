@@ -12,9 +12,6 @@ enum class EWeaponType
 	NoWeapon,
 	PT,
 	AR,
-	SMG,
-	LMG,
-	SG,
 	SR,
 };
 
@@ -40,10 +37,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* FirePos;
 	UPROPERTY(EditAnywhere)
-	int32 Damage;
+	int32 AMMO = 1;
 	UPROPERTY(EditAnywhere)
-	float RPM = 1;
-
+	int32 RPM = 1;
+	UPROPERTY(EditAnywhere)
+	float Damage = 1.0f;
+	UPROPERTY(EditAnywhere)
+	int32 Balance = 1;
 
 	EWeaponType WeaponType;
 };

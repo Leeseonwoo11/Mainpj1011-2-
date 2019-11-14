@@ -77,6 +77,9 @@ public:
 	bool bSprintState = false;
 	void SetTrueSprintState();
 	void SetFalseSprintState();
+	void DownKeyPress(); //아래키 눌렸다(아래키가 눌리면 질주를 못하게 하기위해서)
+	void DownKeyRelease(); // 아래키 안눌렸다.
+	bool IsDown = false; 
 
 	//무기교체에니메이션
 	UPROPERTY(BlueprintReadOnly)
