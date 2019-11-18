@@ -163,12 +163,30 @@ void ATPSCharacter::LeftRight(float NewAxisValue) //좌우 움직임 값 셋
 void ATPSCharacter::SetTrueAimState()
 {
 	bAimState = true;
+	bAimRight = true;
 	SpringArm->TargetArmLength = 100.0f;
 }
 void ATPSCharacter::SetFalseAimState()
 {
-	SpringArm->TargetArmLength = 200.0f;
+	SetCameraOption();
 	bAimState = false;
+}
+void ATPSCharacter::ChangeAimLocation()
+{
+	if (bAimRight) //오른쪽에임이니 왼쪽에임으로 바꾼다.
+	{
+		bAimRight = false;
+		SpringArm->TargetArmLength = 100.0f;
+		SpringArm->SetRelativeRotation(FRotator(-5.0f, 10.0f, 0.0f));
+		SpringArm->SetRelativeLocation(FVector(0.0f, -65.0f, 85.0f));
+	}
+	else
+	{
+		bAimRight = true;
+		SpringArm->TargetArmLength = 100.0f;
+		SpringArm->SetRelativeRotation(FRotator(-5.0f, 0.0f, 0.0f));
+		SpringArm->SetRelativeLocation(FVector(0.0f, 45.0f, 85.0f));
+	}
 }
 //발사상태 설정
 void ATPSCharacter::SetTrueFireState()
@@ -272,6 +290,10 @@ void ATPSCharacter::SetTrueSprintState()
 			bSprintState = true;
 			SetFalseCoverState();
 		}
+	}
+	if (bAimState)
+	{
+		ChangeAimLocation();
 	}
 }
 void ATPSCharacter::SetFalseSprintState()

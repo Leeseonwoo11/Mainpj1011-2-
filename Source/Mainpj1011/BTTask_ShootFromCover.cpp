@@ -9,7 +9,6 @@
 UBTTask_ShootFromCover::UBTTask_ShootFromCover()
 {
 	NodeName = TEXT("ShootFromCover");
-	bNotifyTaskFinished = 1;
 }
 
 EBTNodeResult::Type UBTTask_ShootFromCover::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
@@ -25,6 +24,7 @@ EBTNodeResult::Type UBTTask_ShootFromCover::ExecuteTask(UBehaviorTreeComponent &
 		TPSEnemy->SetFalseCoverState();
 		TPSEnemy->SetTrueAimState();
 		TPSEnemy->CStartShooting();
+		bNotifyTick = 1;
 		return EBTNodeResult::InProgress;
 	}
 }
@@ -47,26 +47,20 @@ EBTNodeResult::Type UBTTask_ShootFromCover::AbortTask(UBehaviorTreeComponent & O
 
 void UBTTask_ShootFromCover::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
-	if ((int32)DeltaSeconds % 500 >= 400)
+	ATPSEnemy* TPSEnemy = Cast<ATPSEnemy>(OwnerComp.GetAIOwner()->GetPawn());
+	if (TPSEnemy != nullptr)
 	{
-		this->ReturnSuccessFunc();
+		if (TPSEnemy->count%100 == 30)
+		{
+			TPSEnemy->SetTrueCoverState();
+			TPSEnemy->SetFalseAimState();
+			TPSEnemy->CStopShoothing();
+			TPSEnemy->count = 0;
+			bNotifyTick = 0;
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
 	}
 }
 
-void UBTTask_ShootFromCover::OnTaskFinished(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, EBTNodeResult::Type TaskResult)
-{
-	FTimerManager TimeManager;
-	
-	if(TaskResult == EBTNodeResult::InProgress )
-	{
-		uint32 bNotifyTick = 1;
-	}
-}
-
-EBTNodeResult::Type UBTTask_ShootFromCover::ReturnSuccessFunc()
-{
-	uint32 bNotifyTick = 0;
-	return EBTNodeResult::Succeeded;
-}
 
 

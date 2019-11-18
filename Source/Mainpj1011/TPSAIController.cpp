@@ -71,9 +71,8 @@ void ATPSAIController::PerceptionUpdate(const TArray<AActor*>& UpdatedActors)
 						OnSightPerceptionUpdate(TempActor, ActorPerceptionInfo.LastSensedStimuli[index]);
 						break;
 
-
 					default:
-						UE_LOG(LogTemp, Warning, TEXT("There is no third sense lol wtf"));
+						UE_LOG(LogTemp, Warning, TEXT("no sense"));
 						break;
 					}
 				}

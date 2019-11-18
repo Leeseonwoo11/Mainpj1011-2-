@@ -56,6 +56,8 @@ public:
 	bool bAimState = false;
 	void SetTrueAimState();
 	void SetFalseAimState();
+	void ChangeAimLocation();
+	bool bAimRight = true; //캐릭터의오른쪽으로 조준선 잡음
 
 	//발사,발사애니메이션,발사위치,발사속도 타이머
 	UPROPERTY(BlueprintReadOnly)

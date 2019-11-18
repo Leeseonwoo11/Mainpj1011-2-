@@ -6,7 +6,6 @@
 #include "DrawDebugHelpers.h"
 #include "TPSAIController.h"
 #include "AIModule/Classes/BrainComponent.h"
-
 // Sets default values
 ATPSEnemy::ATPSEnemy()
 {
@@ -30,6 +29,7 @@ ATPSEnemy::ATPSEnemy()
 	BulletPool = CreateDefaultSubobject<UBulletPoolComponent>(TEXT("BULLETPOOL"));
 
 	AIControllerClass = ATPSAIController::StaticClass();
+
 }
 
 // Called when the game starts or when spawned
@@ -95,12 +95,6 @@ void ATPSEnemy::Fire()
 	if (CurWeapon != nullptr)
 	{
 		auto TempBullet = BulletPool->GetBulletPtr();
-
-		if (TempBullet != nullptr)
-		{
-			UE_LOG(LogTemp, Error, TEXT("FIRE + %d"),count++);
-		}
-
 		if (TempBullet != nullptr)
 		{
 			if (!Cast<ATPSAIController>(GetController())->CanSeePlayerAI)
@@ -115,7 +109,6 @@ void ATPSEnemy::Fire()
 				TempBullet->ProjectileMovement->Velocity.Z = (CurWeapon->FirePos->GetComponentLocation().Z - TargetLoc.Z);
 				TempBullet->SetActive(true);
 				TempBullet->BulletTrail->Activate(true);
-				//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
 			}
 			else
 			{
@@ -128,9 +121,9 @@ void ATPSEnemy::Fire()
 				TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
 				TempBullet->SetActive(true);
 				TempBullet->BulletTrail->Activate(true);
-				//UE_LOG(LogTemp, Error, TEXT("Enemy fire count is  = %d"), count++);
 				DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Red, false, 1.0f);
 			}
+			UE_LOG(LogTemp, Error, TEXT("FIRE + %d"), count++);
 		}
 	}
 }
@@ -173,6 +166,10 @@ void ATPSEnemy::CStopShoothing()
 void ATPSEnemy::CEnterCover()
 {
 	SetTrueCoverState();
+}
+void ATPSEnemy::COutCover()
+{
+	SetFalseCoverState();
 }
 
 void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
