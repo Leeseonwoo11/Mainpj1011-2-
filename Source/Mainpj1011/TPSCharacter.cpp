@@ -182,7 +182,7 @@ void ATPSCharacter::ChangeAimLocation()
 	}
 	else
 	{
-		bAimRight = true;
+		bAimRight = true; //왼쪽에임이니 오른쪽에임으로 바꾼다.
 		SpringArm->TargetArmLength = 100.0f;
 		SpringArm->SetRelativeRotation(FRotator(-5.0f, 0.0f, 0.0f));
 		SpringArm->SetRelativeLocation(FVector(0.0f, 45.0f, 85.0f));
