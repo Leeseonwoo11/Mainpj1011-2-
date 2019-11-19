@@ -10,7 +10,7 @@ AWeapon::AWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	WeaponBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPONBODY"));
-	FirePos = CreateDefaultSubobject<USceneComponent>(TEXT("FIREPOS"));
+	FirePos = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FIREPOS"));
 	FirePos->SetupAttachment(WeaponBody);
 	WeaponType = EWeaponType::NoWeapon;
 }

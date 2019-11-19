@@ -7,8 +7,10 @@
 #include "Weapon.h"
 #include "BulletPoolComponent.h"
 #include "TPSCharacter.h"
-#include "WidgetComponent.h"
+#include "TPSEnemyStatComponent.h"
+#include "Components/WidgetComponent.h"
 #include "TPSEnemy.generated.h"
+
 
 UCLASS()
 class MAINPJ1011_API ATPSEnemy : public ACharacter
@@ -24,6 +26,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	virtual void PostInitializeComponents() override;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -32,6 +36,9 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UBulletPoolComponent* BulletPool;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	UTPSEnemyStatComponent* StatComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AWeapon* CurWeapon;  // 현재무기
@@ -87,9 +94,12 @@ public:
 	void COutCover();
 	UFUNCTION()
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Health = 100.0f;
 
+
+	UPROPERTY(VisibleAnywhere)
+	UWidgetComponent* EnemyHPWidget;
+	UPROPERTY(VisibleAnywhere)
+	UClass* Widget;
 
 
 };

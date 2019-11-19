@@ -5,6 +5,8 @@
 #include "Weapon_AR.h"
 #include "DrawDebugHelpers.h"
 #include "TPSAIController.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "EnemyHPBarWidget.h"
 #include "AIModule/Classes/BrainComponent.h"
 // Sets default values
 ATPSEnemy::ATPSEnemy()
@@ -28,7 +30,19 @@ ATPSEnemy::ATPSEnemy()
 	
 	BulletPool = CreateDefaultSubobject<UBulletPoolComponent>(TEXT("BULLETPOOL"));
 
+	StatComp = CreateDefaultSubobject<UTPSEnemyStatComponent>(TEXT("STATCOMP"));
+
 	AIControllerClass = ATPSAIController::StaticClass();
+
+	EnemyHPWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPWIDGET"));
+	EnemyHPWidget->SetupAttachment(GetCapsuleComponent());
+	EnemyHPWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+	static ConstructorHelpers::FObjectFinder<UClass>UW_HPBar(TEXT("/Game/MyNew/HUD/EnemyHPBar.EnemyHPBar_C"));
+	if (UW_HPBar.Succeeded())
+	{
+		Widget = UW_HPBar.Object;
+	}
+
 
 }
 
@@ -43,10 +57,26 @@ void ATPSEnemy::BeginPlay()
 	{
 		AssaultRifle->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
 	}
-	TempCharacter =Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
+	TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSEnemy::OnComponentBeginOverlap);
+}
 
+void ATPSEnemy::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UUserWidget* HPBar = CreateWidget<UUserWidget>(GetWorld(), Widget);
+	EnemyHPWidget->SetWidget(HPBar);
+	EnemyHPWidget->SetDrawSize(FVector2D(150.0f, 50.0f));
+	auto EnemyWidget = Cast<UEnemyHPBarWidget>(EnemyHPWidget->GetUserWidgetObject());
+	if (EnemyWidget != nullptr)
+	{
+		EnemyWidget->BindEnemyHP(StatComp);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("EnemyWidget is nullptr"));
+	}
 }
 
 // Called every frame
@@ -63,6 +93,8 @@ void ATPSEnemy::Tick(float DeltaTime)
 			TargetLoc = TempCharacter->GetMesh()->GetSocketLocation(FName("neck_01")); // Fire함수에서 총알을 발사할 위치
 		}
 	}
+	FRotator WidgetRot = UKismetMathLibrary::FindLookAtRotation(EnemyHPWidget->GetComponentLocation(), TempCharacter->GetMesh()->GetComponentLocation());
+	EnemyHPWidget->SetWorldRotation(WidgetRot); // 위젯 캐릭터가 볼수있게 돌리기
 }
 
 // Called to bind functionality to input
@@ -176,14 +208,14 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 {
 	if (OtherComp->ComponentHasTag(FName("BULLET")))
 	{
-		Health -= (float)Cast<ABullet>(OtherComp->GetOwner())->Damage;
+		StatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
 		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
 		if (AIController != nullptr)
 		{
 			AIController->SetFocus(TempCharacter);
 		}
 	}
-	if (Health <= 0)
+	if (StatComp->Health <= 0)
 	{
 		GetMesh()->SetSimulatePhysics(true);
 		
@@ -198,4 +230,7 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 		SetLifeSpan(1.5f);
 	}
 }
+
+
+
 

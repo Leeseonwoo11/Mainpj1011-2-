@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* WeaponBody;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USceneComponent* FirePos;
+	UStaticMeshComponent* FirePos;
 	UPROPERTY(EditAnywhere)
 	int32 AMMO = 1;
 	UPROPERTY(EditAnywhere)
