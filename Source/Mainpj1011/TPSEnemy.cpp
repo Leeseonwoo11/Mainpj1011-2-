@@ -42,8 +42,6 @@ ATPSEnemy::ATPSEnemy()
 	{
 		Widget = UW_HPBar.Object;
 	}
-
-
 }
 
 // Called when the game starts or when spawned
@@ -214,20 +212,35 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 		{
 			AIController->SetFocus(TempCharacter);
 		}
+	}	
+	if (OtherComp->ComponentHasTag(FName("MINE")))
+	{
+		UE_LOG(LogTexture, Error,TEXT("mine"));
+		StatComp->SetDamage(50.0f);//임시값:유도지뢰의 데미지
+		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
+		if (AIController != nullptr)
+		{
+			AIController->SetFocus(TempCharacter);
+		}
+		OtherComp->GetOwner()->SetLifeSpan(0.5f);
 	}
-	if (StatComp->Health <= 0)
+
+	if (StatComp->Health <= 0) //적 캐릭터 사망유무체크
 	{
 		GetMesh()->SetSimulatePhysics(true);
-		
-		UBrainComponent* Brain = Cast<ATPSAIController>(GetController())->GetBrainComponent();
-		if (Brain != nullptr)
+		ATPSAIController* TPSAIController = Cast<ATPSAIController>(GetController());
+		if (TPSAIController != nullptr)
 		{
-			Brain->StopLogic(TEXT("DIE"));
+			UBrainComponent* Brain = TPSAIController->GetBrainComponent();
+			if (Brain != nullptr)
+			{
+				Brain->StopLogic(TEXT("DIE"));
+			}
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+			BulletPool->DestroyBulletPool();
+			CurWeapon->Destroy();
+			SetLifeSpan(1.5f);
 		}
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-		BulletPool->DestroyBulletPool();
-		CurWeapon->Destroy();
-		SetLifeSpan(1.5f);
 	}
 }
 

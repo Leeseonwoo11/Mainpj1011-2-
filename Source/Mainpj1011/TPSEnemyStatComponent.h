@@ -25,7 +25,7 @@ protected:
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health = 100.0f;
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SetDamage(float NewDamage);
 	UFUNCTION()
 	float GetHPRatio(); //HP 비율 리턴 (HP바 위젯에서 피통설정 하기위해)

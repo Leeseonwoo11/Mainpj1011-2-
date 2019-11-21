@@ -3,7 +3,7 @@
 #pragma once
 
 #include "EngineMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "SkillObject.generated.h"
 
 
@@ -18,7 +18,7 @@ enum class ESkillType
 };
 
 UCLASS()
-class MAINPJ1011_API ASkillObject : public APawn
+class MAINPJ1011_API ASkillObject : public ACharacter
 {
 	GENERATED_BODY()
 	
