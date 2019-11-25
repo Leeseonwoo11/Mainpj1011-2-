@@ -5,12 +5,14 @@
 #include "TPSEnemy.h"
 #include "AIController.h"
 #include "Particles/ParticleSystem.h"
+#include "DrawDebugHelpers.h"
 
 ASkill_TrackingMine::ASkill_TrackingMine()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCapsuleComponent()->SetCollisionProfileName(FName("TrackingMines"));
+	GetCapsuleComponent()->SetCollisionProfileName(FName("SkillObject"));
+
 	SkillRange->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	SkillRange->SetCollisionProfileName(FName("Bullet"));
 	SkillRange->ComponentTags.Add(TEXT("MINE"));
@@ -54,6 +56,7 @@ ASkill_TrackingMine::ASkill_TrackingMine()
 	{
 		Plane->SetMaterial(0, M_PLANE.Object);
 	}
+	SkillType = ESkillType::TrackingMines;
 }
 
 void ASkill_TrackingMine::BeginPlay()
@@ -93,6 +96,8 @@ void ASkill_TrackingMine::Tick(float DeltaTime)
 	{
 		if (IsExplosion == false)
 		{
+			DrawDebugLine(GetWorld(), GetMesh()->GetComponentLocation(), TargetLocation, FColor::Red);
+
 			if (EnemyMoveTo == EPathFollowingRequestResult::AlreadyAtGoal)
 			{
 				UE_LOG(LogTexture, Error, TEXT(" doldollee Move "));
@@ -115,6 +120,7 @@ void ASkill_TrackingMine::OnActorBeginOverlap(UPrimitiveComponent * OverlappedCo
 		{
 			bPlayerfallow = false;
 			UE_LOG(LogTexture, Error, TEXT("TempAiController not null"));
+			TargetLocation = OtherComp->GetOwner()->GetActorLocation();
 			EnemyMoveTo = TempAiController->MoveToActor(OtherComp->GetOwner(), 50.0f);
 		}
 	}

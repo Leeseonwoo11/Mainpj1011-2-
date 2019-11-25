@@ -9,6 +9,9 @@ ASkill_Pulse::ASkill_Pulse()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetCapsuleComponent()->SetCollisionProfileName(FName("SkillObject"));
+	GetCapsuleComponent()->SetSimulatePhysics(true);
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh>SM_PULSE(TEXT("/Game/StarterContent/Shapes/Shape_QuadPyramid"));
 	if (SM_PULSE.Succeeded())
 	{

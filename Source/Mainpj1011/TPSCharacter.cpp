@@ -38,6 +38,8 @@ ATPSCharacter::ATPSCharacter()
 	PerceptionSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("PerceptionSource"));
 	PerceptionSource->RegisterForSense(UAISense_Sight::StaticClass());
 	PerceptionSource->RegisterWithPerceptionSystem();
+
+	PlayerStatComp = CreateDefaultSubobject<UTPSCharacterStatComponent>(TEXT("PlayerStatComp"));
 }
 
 // Called when the game starts or when spawned
@@ -89,6 +91,7 @@ void ATPSCharacter::Tick(float DeltaTime)
 		else if (CurWeapon->WeaponType == EWeaponType::PT)
 			bAutomaticFire = false;
 	}
+	UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
 }
 
 // Called to bind functionality to input
@@ -261,7 +264,7 @@ void ATPSCharacter::Fire()
 			FRotator BulletRot = GetActorRotation();
 			BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
 
-			TempBullet->Damage = CurWeapon->Damage;
+			TempBullet->Damage = CurWeapon->Damage+ PlayerStatComp->PlayerAttackPower; //무기의 데미지 + 플레이어 공격파워
 			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 			TempBullet->SetActorRotation(BulletRot);
 			TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
@@ -484,23 +487,12 @@ bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & Ou
 		{
 			OutSeenLocation = SocketLocation;
 			OutSightStrength = 1;
-		//	UE_LOG(LogTemp, Warning, TEXT("TRUE"));
+			UE_LOG(LogTemp, Warning, TEXT("TRUE"));
 			return true;
 		}
 	}
-	const bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, ObserverLocation, GetActorLocation(), ECC_GameTraceChannel5);
-	NumberOfLoSChecksPerformed++;
-	if (bHit == true)
-	{
-		if (HitResult.Actor.IsValid() && HitResult.Actor->IsOwnedBy(this))
-		{
-			OutSeenLocation = GetActorLocation();
-			OutSightStrength = 1;
-			//UE_LOG(LogTemp, Warning, TEXT("TRUE"));
-			return true;
-		}
-	}
-	//UE_LOG(LogTemp, Warning, TEXT("FALSE"));
+
+	UE_LOG(LogTemp, Warning, TEXT("FALSE"));
 	OutSightStrength = 0;
 	return false;
 }

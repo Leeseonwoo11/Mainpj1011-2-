@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISightTargetInterface.h"
+#include "TPSCharacterStatComponent.h"
 #include "TPSCharacter.generated.h"
 
 
@@ -41,6 +42,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UBulletPoolComponent* BulletPool;
+
+	UPROPERTY(VisibleAnywhere)
+	UTPSCharacterStatComponent* PlayerStatComp;
 
 	//카메라옵션
 	void SetCameraOption();

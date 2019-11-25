@@ -11,7 +11,7 @@ ASkillObject::ASkillObject()
 	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
 	Body->SetupAttachment(GetCapsuleComponent());
 	SkillRange = CreateDefaultSubobject<USphereComponent>(TEXT("SkillRange"));
-	SkillRange->SetupAttachment(RootComponent);
+	SkillRange->SetupAttachment(GetCapsuleComponent());
 	SkillType = ESkillType::NoSkillObj;
 }
 

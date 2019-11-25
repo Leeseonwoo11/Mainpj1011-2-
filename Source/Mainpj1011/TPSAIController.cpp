@@ -83,21 +83,30 @@ void ATPSAIController::PerceptionUpdate(const TArray<AActor*>& UpdatedActors)
 
 void ATPSAIController::OnSightPerceptionUpdate(AActor * TempActor, FAIStimulus Stimulus)
 {
+	UE_LOG(LogType, Warning, TEXT("SightPerceptioning....................."));
+
 	if (TempActor->ActorHasTag(TEXT("PLAYER")))
 	{
 		if (Stimulus.WasSuccessfullySensed())
 		{
+			UE_LOG(LogType, Error, TEXT("Sense and AICon canseepalyer"));
 			Blackboard->SetValueAsBool(CanSeePlayer, true);
 			CanSeePlayerAI = true;
 		}
-		else if (CanSeePlayerAI)
+		else
 		{
+			UE_LOG(LogType, Error, TEXT("Sense but AICon can not seepalyer"));
+
 			CanSeePlayerAI = false;
 			Blackboard->SetValueAsBool(CanSeePlayer, false);
 		}
-		else
-		{
-		}
+	}
+	else
+	{
+		UE_LOG(LogType, Error, TEXT("No Sense AICon can not seepalyer"));
+
+		CanSeePlayerAI = false;
+		Blackboard->SetValueAsBool(CanSeePlayer, false);
 	}
 	if (Blackboard->GetValueAsBool(CanSeePlayer) && ControllingEnemy->bCrouchState)
 	{

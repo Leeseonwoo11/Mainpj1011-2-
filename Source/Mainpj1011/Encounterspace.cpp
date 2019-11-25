@@ -41,7 +41,7 @@ void AEncounterspace::CallOutTarget(FVector TargetLoc)
 		{
 			ATPSAIController* EnemyAIController = Cast<ATPSAIController>(Cast<ATPSEnemy>(Enemy)->GetController());
 			EnemyAIController->GetBlackboard()->SetValueAsVector(FName("TargetLocation"), TargetLocation);
-			EnemyAIController->GetBlackboard()->SetValueAsBool(FName("CanSeePlayer"), true);
+			EnemyAIController->SetFocus(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		}
 	}
 	

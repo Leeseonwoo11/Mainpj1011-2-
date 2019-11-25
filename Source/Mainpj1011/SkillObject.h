@@ -40,9 +40,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	USphereComponent* SkillRange;
 	UPROPERTY()
-	float SkillPower;
+	float SkillPower = 1.0f;
 	UPROPERTY()
-	float Cooltime;
+	float Cooltime = 1.0f;
 	UPROPERTY()
 	ESkillType SkillType;
 	UFUNCTION()
