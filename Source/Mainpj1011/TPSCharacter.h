@@ -77,6 +77,11 @@ public:
 	FVector TargetLoc;
 	UPROPERTY()
 	FTimerHandle FireSpeedTimer;
+	UPROPERTY()
+	FTimerHandle FireCheckTimer; // 연사가 불가능한 총기가 클릭하는 속도따라 발사되는것을 방지하기 위한 타이머.;
+	UFUNCTION()
+	void FireCheck(); // 파이어 체크 타이머에 의해서 돌아가는 과도한 연사방지함수;
+	bool FireCheckFlag = true;
 
 	//질주 에니메이션
 	UPROPERTY(BlueprintReadOnly)
@@ -104,6 +109,17 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bWeapon3 = false;
 	void SetWeapon3();
+
+	//무기 장전
+	UFUNCTION()
+	void preReload();
+	UPROPERTY(BlueprintReadWrite)
+	bool IsReload;
+	UFUNCTION()
+	void Reload(EWeaponType CurWeaponType);
+	bool bAutoFireRelaodFlag = true;
+
+
 
 	//은엄페
 	UPROPERTY(BlueprintReadOnly)

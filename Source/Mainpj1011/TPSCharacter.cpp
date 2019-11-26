@@ -7,6 +7,7 @@
 #include "Weapon_SR.h"
 #include "DrawDebugHelpers.h"
 #include "Perception/AISense_Sight.h"
+#include "TableManager.h"
 
 
 // Sets default values
@@ -91,7 +92,17 @@ void ATPSCharacter::Tick(float DeltaTime)
 		else if (CurWeapon->WeaponType == EWeaponType::PT)
 			bAutomaticFire = false;
 	}
-	UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
+	//UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
+	if (CurWeapon->AMMO <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(FireSpeedTimer);
+		bFireState = false;
+		if (bAutoFireRelaodFlag)
+		{
+			bAutoFireRelaodFlag = false;
+			preReload();
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -116,7 +127,7 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Covered", IE_Pressed, this, &ATPSCharacter::SetCover);
 	PlayerInputComponent->BindAction("DownKey", IE_Pressed, this, &ATPSCharacter::DownKeyPress);
 	PlayerInputComponent->BindAction("DownKey", IE_Released, this, &ATPSCharacter::DownKeyRelease);
-
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATPSCharacter::preReload);
 }
 void ATPSCharacter::SetCameraOption()
 {
@@ -196,45 +207,110 @@ void ATPSCharacter::SetTrueFireState()
 {
 	if (!bSprintState)
 	{
-		bFireState = true;
-		preFire();
+		if (!IsReload) 
+		{
+			preFire();
+		}
 	}
-	else if(bAimState)
-	{
-		bFireState = true;
-		preFire();
+	else if (bAimState) // 질주하다가 조준하면 질주상태가 풀리고 조준상태로 넘어가는데 이때 질주키를 누르고 있으면 발사가 안된다. 이 상황을 방지하기위해
+	{					// 추가한 else if문이다.
+		if (!IsReload)
+		{
+			preFire();
+		}
 	}
 }
+void ATPSCharacter::SetFalseFireState()
+{
+	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
+	bFireState = false;
+}
+
 void ATPSCharacter::preFire() //발사전에 준비
 {
+	bAutoFireRelaodFlag = true; //자동장전플래그 
+
 	switch (CurrentWeaponSlot)
 	{
 	case WeaponNum::Pistol:
-		CurWeapon = WeaponSlot3;
-		Fire();
+		if (FireCheckFlag == true)
+		{
+			if (CurWeapon->AMMO > 0)
+			{
+				FireCheckFlag = false;
+				bFireState = true;
+				Fire();
+				GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+			}
+			else//발사하려는데 총알이 없다면 재장전해라.
+			{
+				preReload();
+			}
+		}
 		break;
 	case WeaponNum::Weapon1:
-		CurWeapon = WeaponSlot1;
 		if (WeaponSlot1->WeaponType == EWeaponType::SR)
 		{
-			Fire();
+			if (FireCheckFlag == true)
+			{
+				if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+				{
+
+					FireCheckFlag = false;
+					bFireState = true;
+					Fire();
+					GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+				}
+				else //발사하려는데 총알이 없다면 재장전해라.
+				{
+					preReload();
+				}
+			}
 		}
 		else if (WeaponSlot1->WeaponType == EWeaponType::AR)
 		{
-			float Fireduration = 60.0f/ (float)WeaponSlot1->RPM;
-			GetWorldTimerManager().SetTimer(FireSpeedTimer,this,&ATPSCharacter::Fire,Fireduration, true);
+			if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+			{
+				float Fireduration = 60.0f / (float)WeaponSlot1->RPM;
+				bFireState = true;
+				GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
+			}
+			else //발사하려는데 총알이 없다면 재장전해라.
+			{
+				preReload();
+			}
 		}
 		break;
 	case WeaponNum::Weapon2:
-		CurWeapon = WeaponSlot2;
 		if (WeaponSlot2->WeaponType == EWeaponType::SR)
 		{
-			Fire();
+			if (FireCheckFlag == true)
+			{
+				if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+				{
+					FireCheckFlag = false;
+					bFireState = true;
+					Fire();
+					GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+				}
+				else //발사하려는데 총알이 없다면 재장전해라.
+				{
+					preReload();
+				}
+			}
 		}
 		else if (WeaponSlot2->WeaponType == EWeaponType::AR)
 		{
-			float Fireduration = 60.0f / (float)WeaponSlot2->RPM;
-			GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
+			if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+			{
+				float Fireduration = 60.0f / (float)WeaponSlot2->RPM;
+				bFireState = true;
+				GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
+			}
+			else //발사하려는데 총알이 없다면 재장전해라.
+			{
+				preReload();
+			}
 		}
 		break;
 	}
@@ -272,17 +348,18 @@ void ATPSCharacter::Fire()
 			TempBullet->BulletTrail->Activate(true);
 
 			//DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
-			UE_LOG(LogTemp, Error, TEXT("Character fire count is  = %d"), count++);
-
+			CurWeapon->AMMO -= 1; // 발사할때마다 현재 총의 총알을 1빼준다.
+			UE_LOG(LogTemp, Error, TEXT("Remain Ammo  = %d"), CurWeapon->AMMO);
 		}
 	}
 }
 
-void ATPSCharacter::SetFalseFireState()
+void ATPSCharacter::FireCheck()
 {
-	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
-	bFireState = false;
+	FireCheckFlag = true;
 }
+
+
 //질주상태 설정
 void ATPSCharacter::SetTrueSprintState()
 {
@@ -326,10 +403,10 @@ void ATPSCharacter::SetFalseChangeWeaponState()
 void ATPSCharacter::SetWeapon1()
 {
 	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
-
 	if (CurrentWeaponSlot != WeaponNum::Weapon1)
 	{
 		CurrentWeaponSlot = WeaponNum::Weapon1;
+		CurWeapon = WeaponSlot1;
 		bWeapon1 = true;
 		bWeapon2 = false;
 		bWeapon3 = false;
@@ -352,7 +429,6 @@ void ATPSCharacter::SetWeapon1()
 		//권총 슬롯으로 이동
 		if (WeaponSlot3 != nullptr)
 			WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
-
 	}
 }
 
@@ -363,6 +439,7 @@ void ATPSCharacter::SetWeapon2()
 	if (CurrentWeaponSlot != WeaponNum::Weapon2)
 	{
 		CurrentWeaponSlot = WeaponNum::Weapon2;
+		CurWeapon = WeaponSlot2;
 		bWeapon1 = false;
 		bWeapon2 = true;
 		bWeapon3 = false;
@@ -385,7 +462,6 @@ void ATPSCharacter::SetWeapon2()
 		//1번무기 슬롯으로 이동
 		if(WeaponSlot1 != nullptr)
 		WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
-
 	}
 }
 
@@ -396,6 +472,7 @@ void ATPSCharacter::SetWeapon3()
 	if (CurrentWeaponSlot != WeaponNum::Pistol)
 	{
 		CurrentWeaponSlot = WeaponNum::Pistol;
+		CurWeapon = WeaponSlot3;
 		bWeapon1 = false;
 		bWeapon2 = false;
 		bWeapon3 = true;
@@ -409,6 +486,70 @@ void ATPSCharacter::SetWeapon3()
 		//1번무기 슬롯으로 이동
 		if (WeaponSlot1 != nullptr)
 		WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
+	}
+}
+void ATPSCharacter::preReload() // 무기의 종류에 따라서 탄약의 최대 수와 탄창용량이 달라 무기의 타입을 비교 후 재장전함
+{
+	if (CurWeapon != nullptr)
+	{
+		switch (CurWeapon->WeaponType)
+		{
+		case EWeaponType::PT:
+			Reload(EWeaponType::PT);
+			break;
+
+		case EWeaponType::AR:
+			Reload(EWeaponType::AR);
+			break;
+
+		case EWeaponType::SR:
+			Reload(EWeaponType::SR);
+			break;
+
+		default:
+			break;
+		}
+
+		UE_LOG(LogTexture, Error, TEXT("Current Weapon AMMO is %d"), CurWeapon->AMMO);
+		UE_LOG(LogTexture, Error, TEXT("Current Weapon Total AMMO is %d"), CurWeapon->Total_AMMO);
+	}
+}
+void ATPSCharacter::Reload(EWeaponType CurWeaponType)
+{
+	TableManager* TableMgr = TableManager::GetInstance();
+	if (TableMgr != nullptr)
+	{
+		if (CurWeapon->Total_AMMO >= CurWeapon->AMMO) // 총 가지고 있는 한탄창보다 많거나 같다면
+		{
+			if (CurWeapon->AMMO <= 0) //잔탄이 없을때
+			{
+				IsReload = true;
+				CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType);
+				CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType);
+			}
+			else if (CurWeapon->AMMO == TableMgr->GetWeaponAMMO(CurWeaponType))// 총알이 소모되지않고 그대로 있을때
+			{
+				//아무것도 안한다.
+			}
+			else // 잔탄이 있을때
+			{
+				IsReload = true;
+				int32 RemainAmmo = CurWeapon->AMMO; //잔탄저장
+				CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType); //탄 채움
+				CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType); // 총 탄약에서 한탄창뺌
+				CurWeapon->Total_AMMO += RemainAmmo; // 총탄약에 잔탄 채움
+			}
+		}
+		else if (CurWeapon->Total_AMMO <= 0) // 전체 남은 탄약이 한탄창도 안되지만 0은 아니라면
+		{
+			IsReload = true;
+			CurWeapon->AMMO = CurWeapon->Total_AMMO;
+			CurWeapon->Total_AMMO = 0;
+		}
+		else // 전체 남은 탄약이 없다면
+		{
+			//아무것도 안한다.
+		}
 	}
 }
 //은엄폐상태 설정

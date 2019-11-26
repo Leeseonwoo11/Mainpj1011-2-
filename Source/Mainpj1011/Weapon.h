@@ -39,6 +39,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 AMMO = 1;
 	UPROPERTY(EditAnywhere)
+	int32 Total_AMMO = 1;
+	UPROPERTY(EditAnywhere)
 	int32 RPM = 1;
 	UPROPERTY(EditAnywhere)
 	float Damage = 1.0f;

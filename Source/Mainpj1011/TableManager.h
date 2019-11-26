@@ -181,6 +181,43 @@ public:
 		else
 			return 0;
 	}
+	int32 GetTotal_AMMO(EWeaponType Type)
+	{
+		int32 WeaponNum = 0;
+		switch (Type)
+		{
+		case EWeaponType::AR:
+			WeaponNum = 1;
+			break;
+		case EWeaponType::PT:
+			WeaponNum = 3;
+			break;
+		case EWeaponType::SR:
+			WeaponNum = 2;
+			break;
+		case EWeaponType::NoWeapon:
+			WeaponNum = 4;
+			break;
+		default:
+			WeaponNum = 4;
+			break;
+		}
+		if (WeaponDataTable != nullptr)
+		{
+			FWeaponTable* WeaponTable = WeaponDataTable->FindRow<FWeaponTable>(FName(*(FString::FormatAsNumber(WeaponNum))), FString(""));
+			if (WeaponTable != nullptr)
+			{
+				return WeaponTable->nTotalAMMO;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("WeaponTable is nullptr"))
+					return 0;
+			}
+		}
+		else
+			return 0;
+	}
 
 	void SetDataTable(const TCHAR* ContentPath) //캐릭터 레벨 데이터 테이블 셋
 	{

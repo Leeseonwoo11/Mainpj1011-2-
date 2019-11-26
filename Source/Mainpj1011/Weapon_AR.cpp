@@ -26,8 +26,11 @@ void AWeapon_AR::BeginPlay()
 	Damage = TableMgr->GetWeaponDamage(WeaponType);
 	RPM = TableMgr->GetWeaponRPM(WeaponType);
 	AMMO = TableMgr->GetWeaponAMMO(WeaponType);
+	Total_AMMO = TableMgr->GetTotal_AMMO(WeaponType);
 
 	UE_LOG(LogTemp, Error, TEXT("AR RPM is %d"), RPM);
 	UE_LOG(LogTemp, Error, TEXT("AR DMG is %f"), Damage);
 	UE_LOG(LogTemp, Error, TEXT("AR AMMO is %d"), AMMO);
+	UE_LOG(LogTemp, Error, TEXT("AR Total AMMO is %d"), Total_AMMO);
+
 }

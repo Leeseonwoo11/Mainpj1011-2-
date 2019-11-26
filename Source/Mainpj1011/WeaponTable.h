@@ -23,5 +23,7 @@ public:
 		float fDAMAGE;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 		int32 nBALANCE;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+		int32 nTotalAMMO;
 };
 

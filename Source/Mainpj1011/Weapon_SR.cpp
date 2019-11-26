@@ -22,7 +22,11 @@ void AWeapon_SR::BeginPlay()
 	Damage = TableMgr->GetWeaponDamage(WeaponType);
 	RPM = TableMgr->GetWeaponRPM(WeaponType);
 	AMMO = TableMgr->GetWeaponAMMO(WeaponType);
-	UE_LOG(LogTemp, Error, TEXT("Pistol RPM is %d"), RPM);
-	UE_LOG(LogTemp, Error, TEXT("Pistol DMG is %f"), Damage);
-	UE_LOG(LogTemp, Error, TEXT("Pistol AMMO is %d"), AMMO);
+	Total_AMMO = TableMgr->GetTotal_AMMO(WeaponType);
+
+	UE_LOG(LogTemp, Error, TEXT("SR RPM is %d"), RPM);
+	UE_LOG(LogTemp, Error, TEXT("SR DMG is %f"), Damage);
+	UE_LOG(LogTemp, Error, TEXT("SR AMMO is %d"), AMMO);
+	UE_LOG(LogTemp, Error, TEXT("SR Total AMMO is %d"), Total_AMMO);
+
 }
