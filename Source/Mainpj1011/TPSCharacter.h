@@ -43,7 +43,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UBulletPoolComponent* BulletPool;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	UTPSCharacterStatComponent* PlayerStatComp;
 
 	//카메라옵션
@@ -119,6 +119,13 @@ public:
 	void Reload(EWeaponType CurWeaponType);
 	bool bAutoFireRelaodFlag = true;
 
+	//위젯에서 불러쓰는 값들
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	int32 CurAMMO; //현재탄약 (위젯에서 사용)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 TotalAMMO;// 총탄약 (위젯에서 사용)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerHPRatio; // HP비율(위젯에서 사용)
 
 
 	//은엄페
@@ -148,6 +155,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bAutomaticFire;
 
+	//무기 슬롯 이넘
 	enum class WeaponNum
 	{
 		Weapon1,
@@ -156,16 +164,23 @@ public:
 	};
 	//현재무기이넘값
 	WeaponNum CurrentWeaponSlot = WeaponNum::Weapon1;
-	int32 count = 0;
 
+
+	// 충돌체크
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+
+	//적이 캐릭터를 볼수있도록 해줌 (AIPerception)
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	UAIPerceptionStimuliSourceComponent* PerceptionSource;
-	
 	virtual bool CanBeSeenFrom(const FVector & ObserverLocation,
 			FVector & OutSeenLocation,
 			int32 & NumberOfLoSChecksPerformed,
 			float & OutSightStrength,
 			const AActor * IgnoreActor = nullptr)const;
+	//델리게이트
+	
 };
 
 

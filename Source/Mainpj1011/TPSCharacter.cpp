@@ -25,7 +25,11 @@ ATPSCharacter::ATPSCharacter()
 	
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(GetCapsuleComponent());
+
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
+
 	SetCameraOption();
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIMBP_BODY(TEXT("/Game/MyNew/Animation/CharacterAnim/CharacterAnimation"));
@@ -71,6 +75,8 @@ void ATPSCharacter::BeginPlay()
 	}
 	SetWeapon3();
 	SetFalseCoverState();
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacter::OnComponentBeginOverlap);
 }
 
 // Called every frame
@@ -91,6 +97,9 @@ void ATPSCharacter::Tick(float DeltaTime)
 			bAutomaticFire = false;
 		else if (CurWeapon->WeaponType == EWeaponType::PT)
 			bAutomaticFire = false;
+
+		CurAMMO = CurWeapon->AMMO;
+		TotalAMMO = CurWeapon->Total_AMMO;
 	}
 	//UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
 	if (CurWeapon->AMMO <= 0)
@@ -102,6 +111,10 @@ void ATPSCharacter::Tick(float DeltaTime)
 			bAutoFireRelaodFlag = false;
 			preReload();
 		}
+	}
+	if (PlayerStatComp != nullptr)
+	{
+		PlayerHPRatio = PlayerStatComp->GetHPRatio();
 	}
 }
 
@@ -131,14 +144,11 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 }
 void ATPSCharacter::SetCameraOption()
 {
-	SpringArm->SetupAttachment(GetCapsuleComponent());
-
 	SpringArm->TargetArmLength = 200.0f;
 	SpringArm->SetRelativeRotation(FRotator(-5.0f, 0.0f, 0.0f));
 	SpringArm->SetRelativeLocation(FVector(0.0f, 45.0f, 85.0f));
 	SpringArm->bUsePawnControlRotation = true;
 
-	Camera->SetupAttachment(SpringArm);
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
@@ -614,6 +624,14 @@ FRotator ATPSCharacter::GetAimOffsets() const
 	const FRotator AimRotLS = AimDirLS.Rotation();
 
 	return AimRotLS;
+}
+
+void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherComp->ComponentHasTag(FName("BULLET")))
+	{
+		PlayerStatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
+	}
 }
 
 bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & OutSeenLocation, int32 & NumberOfLoSChecksPerformed, float & OutSightStrength, const AActor * IgnoreActor) const

@@ -32,3 +32,16 @@ void UTPSCharacterStatComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	// ...
 }
 
+void UTPSCharacterStatComponent::SetDamage(float Damage)
+{
+	if (Damage > 0)
+	{
+		PlayerHealth -= Damage;
+	}
+}
+
+float UTPSCharacterStatComponent::GetHPRatio()
+{
+	return PlayerHealth / 100.0f;
+}
+

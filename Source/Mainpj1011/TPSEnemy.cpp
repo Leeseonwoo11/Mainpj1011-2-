@@ -35,7 +35,7 @@ ATPSEnemy::ATPSEnemy()
 	AIControllerClass = ATPSAIController::StaticClass();
 
 	EnemyHPWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPWIDGET"));
-	EnemyHPWidget->SetupAttachment(GetCapsuleComponent());
+	EnemyHPWidget->SetupAttachment(GetMesh());
 	EnemyHPWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
 	static ConstructorHelpers::FObjectFinder<UClass>UW_HPBar(TEXT("/Game/MyNew/HUD/EnemyHPBar.EnemyHPBar_C"));
 	if (UW_HPBar.Succeeded())

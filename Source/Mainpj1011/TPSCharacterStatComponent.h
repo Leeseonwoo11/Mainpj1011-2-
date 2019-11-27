@@ -7,6 +7,8 @@
 #include "TPSCharacterStatComponent.generated.h"
 
 
+//DECLARE_MULTICAST_DELEGATE(FCharHPUpdateDeleate);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPJ1011_API UTPSCharacterStatComponent : public UActorComponent
 {
@@ -30,5 +32,13 @@ public:
 	float PlayerAttackPower = 0.0f;
 	UPROPERTY(VisibleAnywhere)
 	float PlayerSkillPower = 0.0f;
+
+	UFUNCTION()
+	void SetDamage(float Damage);
+	UFUNCTION(BlueprintCallable)
+	float GetHPRatio();
+
+	//µ®∏Æ∞‘¿Ã∆Æ
+	//FCharHPUpdateDeleate CharHPUpdateDeleate;
 		
 };

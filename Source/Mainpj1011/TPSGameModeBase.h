@@ -19,5 +19,4 @@ class MAINPJ1011_API ATPSGameModeBase : public AGameModeBase
 public:
 	virtual void BeginPlay() override;
 public:
-
 };
