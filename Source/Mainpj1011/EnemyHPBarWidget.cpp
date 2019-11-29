@@ -32,7 +32,7 @@ void UEnemyHPBarWidget::NativeConstruct()
 
 void UEnemyHPBarWidget::UpdateHPWidget()
 {
-w	if (CurrentStatComponent.IsValid())
+	if (CurrentStatComponent.IsValid())
 	{
 		if (HPProgressBar != nullptr)
 		{
