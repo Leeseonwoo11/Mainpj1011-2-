@@ -126,6 +126,8 @@ public:
 	int32 TotalAMMO;// 총탄약 (위젯에서 사용)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerHPRatio; // HP비율(위젯에서 사용)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float CurWeaponDamage = 0.0f;
 
 
 	//은엄페

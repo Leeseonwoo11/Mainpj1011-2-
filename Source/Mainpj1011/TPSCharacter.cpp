@@ -100,6 +100,7 @@ void ATPSCharacter::Tick(float DeltaTime)
 
 		CurAMMO = CurWeapon->AMMO;
 		TotalAMMO = CurWeapon->Total_AMMO;
+		CurWeaponDamage = CurWeapon->Damage;
 	}
 	//UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
 	if (CurWeapon->AMMO <= 0)

@@ -26,11 +26,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	float PlayerHealth = 100.0f;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerAttackPower = 0.0f;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerSkillPower = 0.0f;
 
 	UFUNCTION()
@@ -39,6 +39,5 @@ public:
 	float GetHPRatio();
 
 	//µ®∏Æ∞‘¿Ã∆Æ
-	//FCharHPUpdateDeleate CharHPUpdateDeleate;
-		
+	//FCharHPUpdateDeleate CharHPUpdateDeleate;	
 };
