@@ -22,7 +22,7 @@ ASkill_Support::ASkill_Support()
 	Body->SetupAttachment(GetCapsuleComponent());
 
 	Aura = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SupportAura"));
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_AURA(TEXT("/Game/FXVarietyPack/Particles/P_ky_healAura"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_AURA(TEXT("/Game/MyNew/Particle/SkillEffect/SupportEffect"));
 	if (PS_AURA.Succeeded())
 	{
 		Aura->SetTemplate(PS_AURA.Object);

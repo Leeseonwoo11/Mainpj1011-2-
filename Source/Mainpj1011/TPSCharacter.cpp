@@ -530,36 +530,40 @@ void ATPSCharacter::Reload(EWeaponType CurWeaponType)
 	TableManager* TableMgr = TableManager::GetInstance();
 	if (TableMgr != nullptr)
 	{
-		if (CurWeapon->Total_AMMO >= CurWeapon->AMMO) // 총 가지고 있는 한탄창보다 많거나 같다면
+		if (CurWeapon->Total_AMMO > 0)
 		{
-			if (CurWeapon->AMMO <= 0) //잔탄이 없을때
+			if (CurWeapon->Total_AMMO >= CurWeapon->AMMO) // 총 가지고 있는 한탄창보다 많거나 같다면
+			{
+				if (CurWeapon->AMMO <= 0) //잔탄이 없을때
+				{
+					IsReload = true;
+					CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType);
+					CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType);
+				}
+				else if (CurWeapon->AMMO == TableMgr->GetWeaponAMMO(CurWeaponType))// 총알이 소모되지않고 그대로 있을때
+				{
+					//아무것도 안한다.
+				}
+				else // 잔탄이 있을때
+				{
+					IsReload = true;
+					int32 RemainAmmo = CurWeapon->AMMO; //잔탄저장
+					CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType); //탄 채움
+					CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType); // 총 탄약에서 한탄창뺌
+					CurWeapon->Total_AMMO += RemainAmmo; // 총탄약에 잔탄 채움
+				}
+			}
+			else if ((CurWeapon->Total_AMMO <= TableMgr->GetWeaponAMMO(CurWeaponType)) && (CurWeapon->Total_AMMO > 0)) // 전체 남은 탄약이 한탄창도 안되지만 0은 아니라면
 			{
 				IsReload = true;
-				CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType);
-				CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType);
+				CurWeapon->AMMO = CurWeapon->Total_AMMO;
+				CurWeapon->Total_AMMO = 0;
 			}
-			else if (CurWeapon->AMMO == TableMgr->GetWeaponAMMO(CurWeaponType))// 총알이 소모되지않고 그대로 있을때
+			else // 전체 남은 탄약이 없다면
 			{
 				//아무것도 안한다.
+				//사실 이 조건에 들어오지도 못한다.
 			}
-			else // 잔탄이 있을때
-			{
-				IsReload = true;
-				int32 RemainAmmo = CurWeapon->AMMO; //잔탄저장
-				CurWeapon->AMMO = TableMgr->GetWeaponAMMO(CurWeaponType); //탄 채움
-				CurWeapon->Total_AMMO -= TableMgr->GetWeaponAMMO(CurWeaponType); // 총 탄약에서 한탄창뺌
-				CurWeapon->Total_AMMO += RemainAmmo; // 총탄약에 잔탄 채움
-			}
-		}
-		else if (CurWeapon->Total_AMMO <= 0) // 전체 남은 탄약이 한탄창도 안되지만 0은 아니라면
-		{
-			IsReload = true;
-			CurWeapon->AMMO = CurWeapon->Total_AMMO;
-			CurWeapon->Total_AMMO = 0;
-		}
-		else // 전체 남은 탄약이 없다면
-		{
-			//아무것도 안한다.
 		}
 	}
 }

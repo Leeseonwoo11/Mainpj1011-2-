@@ -46,7 +46,7 @@ ASkill_TrackingMine::ASkill_TrackingMine()
 	Plane->SetupAttachment(Body);
 	Plane->SetWorldScale3D(FVector(0.1f, 0.1f, 0.25f));
 	Plane->SetWorldLocation(FVector(0.0f, 0.0f, -88.0f));
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_EXP(TEXT("/Game/MilitaryWeapDark/FX/P_Grenade_Explosion_01"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_EXP(TEXT("/Game/MyNew/Particle/SkillEffect/MineEffect"));
 	if (PS_EXP.Succeeded())
 	{
 		ParticleFX1 = PS_EXP.Object;

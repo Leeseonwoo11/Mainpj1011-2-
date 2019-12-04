@@ -15,6 +15,6 @@ class MAINPJ1011_API UTPSGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
-	FTimerHandle AICoverShotTimer;
+	UFUNCTION()
+	int32 RandonNumberRet(int32 a, int32 b);
 };

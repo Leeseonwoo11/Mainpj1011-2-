@@ -3,3 +3,7 @@
 
 #include "TPSGameInstance.h"
 
+int32 UTPSGameInstance::RandonNumberRet(int32 a, int32 b)
+{
+	return FMath::RandRange(a, b);
+}
