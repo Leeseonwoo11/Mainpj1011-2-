@@ -25,3 +25,29 @@ void AArmorStruct::Tick(float DeltaTime)
 
 }
 
+bool operator==(const FArmorPropertyStruct & Property1, const FArmorPropertyStruct & Property2)
+{
+	if (Property1.ArmorName == Property2.ArmorName)
+	{
+		if (Property1.ArmorType == Property2.ArmorType)
+		{
+			if (Property1.Brand == Property2.Brand)
+			{
+				if (Property1.Rank == Property2.Rank)
+				{
+					if ((Property1.SkillPower - Property2.SkillPower) < 0.01f && (Property1.SkillPower - Property2.SkillPower) > -0.01f)
+					{
+						if((Property1.WeaponPower - Property2.WeaponPower) < 0.01f && (Property1.WeaponPower - Property2.WeaponPower) > -0.01f)
+						{
+							if ((Property1.Health - Property2.Health) < 0.01f && (Property1.Health - Property2.Health) > -0.01f)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}

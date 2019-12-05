@@ -75,3 +75,4 @@ public:
 	EBrand Brand;
 };
 
+bool operator==(const FArmorPropertyStruct& Property1, const FArmorPropertyStruct& Property2);

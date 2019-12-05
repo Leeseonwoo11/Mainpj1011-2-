@@ -7,6 +7,7 @@
 #include "Weapon_SR.h"
 #include "DrawDebugHelpers.h"
 #include "Perception/AISense_Sight.h"
+#include "SpawningArmor.h"
 #include "TableManager.h"
 
 
@@ -45,6 +46,9 @@ ATPSCharacter::ATPSCharacter()
 	PerceptionSource->RegisterWithPerceptionSystem();
 
 	PlayerStatComp = CreateDefaultSubobject<UTPSCharacterStatComponent>(TEXT("PlayerStatComp"));
+
+	//------
+	Inven = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 }
 
 // Called when the game starts or when spawned
@@ -501,6 +505,7 @@ void ATPSCharacter::SetWeapon3()
 }
 void ATPSCharacter::preReload() // 무기의 종류에 따라서 탄약의 최대 수와 탄창용량이 달라 무기의 타입을 비교 후 재장전함
 {
+
 	if (CurWeapon != nullptr)
 	{
 		switch (CurWeapon->WeaponType)
@@ -637,6 +642,20 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 	{
 		PlayerStatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
 	}
+	if (OtherComp->ComponentHasTag(FName("SpawnArmor")))
+	{
+		ASpawningArmor* SpawnedArmor = Cast<ASpawningArmor>(OtherComp->GetOwner());
+		if (SpawnedArmor != nullptr)
+		{
+			Inven->AddInventroyItem(SpawnedArmor->ArmorProperty);
+			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor in Inventory"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor is nullptr"));
+		}
+	}
+	
 }
 
 bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & OutSeenLocation, int32 & NumberOfLoSChecksPerformed, float & OutSightStrength, const AActor * IgnoreActor) const

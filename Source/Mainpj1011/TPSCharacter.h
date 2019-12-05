@@ -9,6 +9,7 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISightTargetInterface.h"
 #include "TPSCharacterStatComponent.h"
+#include "InventoryComponent.h"
 #include "TPSCharacter.generated.h"
 
 
@@ -183,6 +184,11 @@ public:
 			const AActor * IgnoreActor = nullptr)const;
 	//델리게이트
 	
+	//인벤토리컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UInventoryComponent* Inven;
+
+
 };
 
 

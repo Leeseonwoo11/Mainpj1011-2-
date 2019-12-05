@@ -14,6 +14,7 @@ ASpawningArmor::ASpawningArmor()
 	Particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 	Particle->SetupAttachment(InteractionBox);
 	ConstructParticle();
+	InteractionBox->ComponentTags.Add(TEXT("SpawnArmor"));
 }
 
 // Called when the game starts or when spawned
