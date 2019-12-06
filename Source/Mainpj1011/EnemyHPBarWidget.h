@@ -26,4 +26,5 @@ private:
 
 	UPROPERTY()
 	class UProgressBar* HPProgressBar;
+	
 };

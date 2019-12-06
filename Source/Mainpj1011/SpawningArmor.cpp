@@ -2,6 +2,7 @@
 
 
 #include "SpawningArmor.h"
+#include "ItemInfomationWidget.h"
 #include "TPSGameInstance.h"
 
 // Sets default values
@@ -15,6 +16,11 @@ ASpawningArmor::ASpawningArmor()
 	Particle->SetupAttachment(InteractionBox);
 	ConstructParticle();
 	InteractionBox->ComponentTags.Add(TEXT("SpawnArmor"));
+}
+void ASpawningArmor::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
 }
 
 // Called when the game starts or when spawned
@@ -38,7 +44,6 @@ void ASpawningArmor::BeginPlay()
 	UE_LOG(LogTexture, Error, TEXT("WeaponPower is %f"), ArmorProperty.WeaponPower);
 	UE_LOG(LogTexture, Error, TEXT("SkillPower is %f"), ArmorProperty.SkillPower);
 	UE_LOG(LogTexture, Error, TEXT("Health is %f"), ArmorProperty.Health);
-
 }
 
 // Called every frame

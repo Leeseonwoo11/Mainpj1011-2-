@@ -5,6 +5,7 @@
 #include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ArmorStruct.h"
+#include "Components/WidgetComponent.h"
 #include "SpawningArmor.generated.h"
 
 UCLASS()
@@ -15,6 +16,8 @@ class MAINPJ1011_API ASpawningArmor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASpawningArmor();
+
+	virtual void PostInitializeComponents() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,16 +43,23 @@ public:
 	UObject* LegendaryEffect;
 	UObject* CurrentEffect;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Ranknum;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Brandnum;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Typenum;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString BrandName;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString TypeName;
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	FString FullName;
 
 	void ConstructParticle();
 	void RankParticleSet();
 	void BrandSet();
 	void TypeSet();
+
+
 };
