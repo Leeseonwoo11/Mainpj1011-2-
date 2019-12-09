@@ -4,6 +4,9 @@
 #include "SpawningArmor.h"
 #include "ItemInfomationWidget.h"
 #include "TPSGameInstance.h"
+#include "TPSCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
+
 
 // Sets default values
 ASpawningArmor::ASpawningArmor()
@@ -12,28 +15,41 @@ ASpawningArmor::ASpawningArmor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	InteractionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractionBox"));
+	InteractionBox->SetRelativeScale3D(FVector(5, 5, 5));
+	InteractionBox->ComponentTags.Add(TEXT("SpawnArmor"));
+	RootComponent = InteractionBox;
+
 	Particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 	Particle->SetupAttachment(InteractionBox);
 	ConstructParticle();
-	InteractionBox->ComponentTags.Add(TEXT("SpawnArmor"));
+	Particle->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
+
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	WidgetComponent->SetupAttachment(InteractionBox);
+	WidgetComponent->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
+
+
+	static ConstructorHelpers::FObjectFinder<UClass>UW_InfoWidget(TEXT("/Game/MyNew/UI/ItemUI/ItemUI.ItemUI_C"));
+	if (UW_InfoWidget.Succeeded())
+	{
+		ArmorInfoWidget = UW_InfoWidget.Object;
+		if (UW_InfoWidget.Object == nullptr)
+		{
+			UE_LOG(LogTexture, Error, TEXT("UW_InfoWidget is nullptr"));
+		}
+	}
+
 }
 void ASpawningArmor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-}
-
-// Called when the game starts or when spawned
-void ASpawningArmor::BeginPlay()
-{
-	Super::BeginPlay();
-
 	UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
 	if (GameInstance != nullptr)
 	{
-		Ranknum = GameInstance->RandonNumberRet(0,4);
-		Brandnum = GameInstance->RandonNumberRet(0,2);
-		Typenum = GameInstance->RandonNumberRet(0,5);
+		Ranknum = GameInstance->RandonNumberRet(0, 4);
+		Brandnum = GameInstance->RandonNumberRet(0, 2);
+		Typenum = GameInstance->RandonNumberRet(0, 5);
 	}
 	BrandSet();
 	TypeSet();
@@ -44,12 +60,41 @@ void ASpawningArmor::BeginPlay()
 	UE_LOG(LogTexture, Error, TEXT("WeaponPower is %f"), ArmorProperty.WeaponPower);
 	UE_LOG(LogTexture, Error, TEXT("SkillPower is %f"), ArmorProperty.SkillPower);
 	UE_LOG(LogTexture, Error, TEXT("Health is %f"), ArmorProperty.Health);
+
+	UUserWidget* ArmorWidget = CreateWidget<UUserWidget>(GetWorld(), ArmorInfoWidget);
+	WidgetComponent->SetWidget(ArmorWidget);
+	WidgetComponent->SetDrawSize(FVector2D(300, 100));
+	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0, 0, 200.0f));
+	auto ArmorWidgetObj = Cast<UItemInfomationWidget>(WidgetComponent->GetUserWidgetObject());
+	if (ArmorWidgetObj != nullptr)
+	{
+		ArmorWidgetObj->bindArmor(this);
+	}
+}
+
+// Called when the game starts or when spawned
+void ASpawningArmor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (TempCharacter == nullptr)
+	{
+		UE_LOG(LogTexture, Error, TEXT("TempCharacter is nullptr"));
+	}
+	WidgetComponent->SetVisibility(false);
+	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ASpawningArmor::OnComponentBeginOverlap);
+	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ASpawningArmor::OnOverlapEnd);
 }
 
 // Called every frame
 void ASpawningArmor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	FRotator WidgetRot = UKismetMathLibrary::FindLookAtRotation(WidgetComponent->GetComponentLocation(), TempCharacter->Camera->GetComponentLocation());
+	WidgetComponent->SetWorldRotation(WidgetRot);
 }
 
 
@@ -143,11 +188,11 @@ void ASpawningArmor::BrandSet()
 		BrandName = "Alps";
 		break;
 	case 1:
-		ArmorProperty.Brand = EBrand::GilagadGroup;
+		ArmorProperty.Brand = EBrand::GilagardGroup;
 		ArmorProperty.WeaponPower = 1.0f;
 		ArmorProperty.SkillPower = 1.0f;
 		ArmorProperty.Health = 3.0f;
-		BrandName = "Gilagad";
+		BrandName = "Gilagard";
 		break;
 	case 2:
 		ArmorProperty.Brand = EBrand::FenrirGroup;
@@ -193,4 +238,27 @@ void ASpawningArmor::TypeSet()
 		break;
 	}
 }
+
+void ASpawningArmor::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherComp->ComponentHasTag(FName("PLAYER")))
+	{
+		WidgetComponent->SetVisibility(true);
+		IsEatableItem = true;
+	}
+}
+void ASpawningArmor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherComp->ComponentHasTag(FName("PLAYER")))
+	{
+		WidgetComponent->SetVisibility(false);
+		IsEatableItem = false;
+	}
+}
+
+void ASpawningArmor::DestroyArmorActor()
+{
+	Destroy();
+}
+
 

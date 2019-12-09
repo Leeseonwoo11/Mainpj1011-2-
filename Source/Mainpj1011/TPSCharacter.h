@@ -10,6 +10,7 @@
 #include "Perception/AISightTargetInterface.h"
 #include "TPSCharacterStatComponent.h"
 #include "InventoryComponent.h"
+#include "SpawningArmor.h"
 #include "TPSCharacter.generated.h"
 
 
@@ -172,7 +173,6 @@ public:
 	// 충돌체크
 	UFUNCTION()
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
 
 	//적이 캐릭터를 볼수있도록 해줌 (AIPerception)
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
@@ -187,7 +187,12 @@ public:
 	//인벤토리컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UInventoryComponent* Inven;
-
+	//인벤토리 아이템 추가
+	UFUNCTION()
+	void AddInventory();
+	//인벤토리에 들어가기전에 임시로 들어가있는 아이템배열
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<ASpawningArmor*> TempArmorArray;
 
 };
 

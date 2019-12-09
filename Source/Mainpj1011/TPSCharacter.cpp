@@ -7,7 +7,6 @@
 #include "Weapon_SR.h"
 #include "DrawDebugHelpers.h"
 #include "Perception/AISense_Sight.h"
-#include "SpawningArmor.h"
 #include "TableManager.h"
 
 
@@ -145,7 +144,8 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Covered", IE_Pressed, this, &ATPSCharacter::SetCover);
 	PlayerInputComponent->BindAction("DownKey", IE_Pressed, this, &ATPSCharacter::DownKeyPress);
 	PlayerInputComponent->BindAction("DownKey", IE_Released, this, &ATPSCharacter::DownKeyRelease);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATPSCharacter::preReload);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATPSCharacter::preReload); 
+	PlayerInputComponent->BindAction("Interaction", IE_Pressed, this, &ATPSCharacter::AddInventory);
 }
 void ATPSCharacter::SetCameraOption()
 {
@@ -647,7 +647,7 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 		ASpawningArmor* SpawnedArmor = Cast<ASpawningArmor>(OtherComp->GetOwner());
 		if (SpawnedArmor != nullptr)
 		{
-			Inven->AddInventroyItem(SpawnedArmor->ArmorProperty);
+			TempArmorArray.Add(SpawnedArmor);
 			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor in Inventory"));
 		}
 		else
@@ -655,7 +655,6 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor is nullptr"));
 		}
 	}
-	
 }
 
 bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & OutSeenLocation, int32 & NumberOfLoSChecksPerformed, float & OutSightStrength, const AActor * IgnoreActor) const
@@ -679,4 +678,22 @@ bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & Ou
 	OutSightStrength = 0;
 	return false;
 }
+
+void ATPSCharacter::AddInventory()
+{
+	for (auto TempArmor : TempArmorArray)
+	{
+		if (TempArmor->IsEatableItem)
+		{
+			Inven->AddInventroyItem(TempArmor->ArmorProperty);
+			TempArmor->Destroy();
+			TempArmorArray.RemoveSingle(TempArmor);
+		}
+		else
+		{
+			TempArmorArray.RemoveSingle(TempArmor);
+		}
+	}
+}
+
 

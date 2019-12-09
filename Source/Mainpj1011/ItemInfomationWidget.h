@@ -22,7 +22,8 @@ public:
 protected:
 	virtual void NativeConstruct();
 private:
-	class UTextBlock* ItemName;
+	class UTextBlock* BrandName;
+	class UTextBlock* TypeName;
 	class UBorder* Border;
 	TWeakObjectPtr<class ASpawningArmor> SpawningArmor;
 

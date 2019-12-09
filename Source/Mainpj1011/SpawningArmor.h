@@ -35,6 +35,8 @@ public:
 	UBoxComponent* InteractionBox;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystemComponent* Particle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UWidgetComponent* WidgetComponent;
 
 	UObject* CommonEffect;
 	UObject* UnCommonEffect;
@@ -60,6 +62,19 @@ public:
 	void RankParticleSet();
 	void BrandSet();
 	void TypeSet();
+
+	class ATPSCharacter* TempCharacter;
+	UClass* ArmorInfoWidget;
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//아이템 먹을수 있는지 체크 bool
+	UPROPERTY()
+	bool IsEatableItem = false;
+	UFUNCTION()
+	void DestroyArmorActor();
 
 
 };

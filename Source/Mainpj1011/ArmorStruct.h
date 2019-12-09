@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ArmorStruct.generated.h"
 
-UENUM()
-enum class EArmorType //아이템 타입
+UENUM(BlueprintType)
+enum class EArmorType : uint8 //아이템 타입
 {
 	Head,
 	Chest,
@@ -16,8 +16,8 @@ enum class EArmorType //아이템 타입
 	Hands,
 	Foots,
 };
-UENUM()
-enum class ERank // 아이템 등급
+UENUM(BlueprintType)
+enum class ERank : uint8 // 아이템 등급
 {
 	Common, //흰색
 	UnCommon, //녹색
@@ -25,10 +25,10 @@ enum class ERank // 아이템 등급
 	Epic, //보라색
 	Legendary, //노란색
 };
-UENUM()
-enum class EBrand //브랜드 이름
+UENUM(BlueprintType)
+enum class EBrand : uint8 //브랜드 이름
 {
-	GilagadGroup, // 방어특화 브랜드
+	GilagardGroup, // 방어특화 브랜드
 	FenrirGroup, // 무기파워특화 브랜드
 	AlpsGroup, //스킬파워 특화 브랜드
 };
@@ -57,21 +57,21 @@ struct FArmorPropertyStruct
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	EArmorType ArmorType;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FName ArmorName;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WeaponPower;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SkillPower;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
 	float Health;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString MeshRefText;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ERank Rank;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EBrand Brand;
 };
 

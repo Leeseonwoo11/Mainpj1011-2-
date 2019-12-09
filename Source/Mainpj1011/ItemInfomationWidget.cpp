@@ -4,7 +4,7 @@
 #include "ItemInfomationWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
-//-------------------------------------------------------------------
+
 void UItemInfomationWidget::bindArmor(ASpawningArmor* NewArmor)
 {
 	if (NewArmor == nullptr)
@@ -14,42 +14,53 @@ void UItemInfomationWidget::bindArmor(ASpawningArmor* NewArmor)
 	}
 	UE_LOG(LogTemp, Error, TEXT("NewArmor is not nullptr"));
 	SpawningArmor = NewArmor;
+	UpdateWidget();
 }
-
 
 void UItemInfomationWidget::NativeConstruct()
 {
-	ItemName = Cast<UTextBlock>(GetWidgetFromName(TEXT("ItemName")));
-	if (ItemName == nullptr)
+	BrandName = Cast<UTextBlock>(GetWidgetFromName(TEXT("BrandName")));
+	TypeName = Cast<UTextBlock>(GetWidgetFromName(TEXT("TypeName")));
+	Border = Cast<UBorder>(GetWidgetFromName(TEXT("Border_155")));
+	if (BrandName == nullptr)
 	{
 		UE_LOG(LogTexture, Error, TEXT("ItemName is nullptr"));
+	}
+	if (TypeName == nullptr)
+	{
+		UE_LOG(LogTexture, Error, TEXT("TypeName is nullptr"));
+	}
+	if (Border == nullptr)
+	{
+		UE_LOG(LogTexture, Error, TEXT("Border is nullptr"));
 	}
 }
 
 void UItemInfomationWidget::UpdateWidget()
-{/*
-	ItemName->SetText(FText::FromName(Item.ArmorName));
-	switch (Item.Rank)
+{
+	BrandName->SetText(FText::FromString(SpawningArmor->BrandName));
+	TypeName->SetText(FText::FromString(SpawningArmor->TypeName));
+	switch (SpawningArmor->ArmorProperty.Rank)
 	{
 	case ERank::Common:
-		Border->SetBrushColor(FColor(0, 0, 0));//Èò»ö
+		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 255.0f, 0.5f));//Èò»ö
 		break;
 	case ERank::UnCommon:
-		Border->SetBrushColor(FColor(0, 1, 0));//ÃÊ·Ï
+		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 0.0f, 0.5f));//ÃÊ·Ï
 		break;
 	case ERank::Rare:
-		Border->SetBrushColor(FColor(0, 1, 1));//½Ã¾È
+		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 255.0f, 0.5f));//½Ã¾È
 		break;
 	case ERank::Epic:
-		Border->SetBrushColor(FColor(1, 0, 1));//¸¶Á¨Å¸
+		Border->SetBrushColor(FLinearColor(255.0f,0.0f,255.0f, 0.5f));//¸¶Á¨Å¸
 		break;
 	case ERank::Legendary:
-		Border->SetBrushColor(FColor(1, 1, 0)); //³ë¶û
+		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 0.0f,0.5f)); //³ë¶û
 		break;
 	default:
 		break;
 	}
-	*/
+	
 	//-------------------------------------------------------------
 }
 
