@@ -8,6 +8,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "EnemyHPBarWidget.h"
 #include "AIModule/Classes/BrainComponent.h"
+#include "Skill_TrackingMine.h"
 // Sets default values
 ATPSEnemy::ATPSEnemy()
 {
@@ -215,14 +216,18 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 	}	
 	if (OtherComp->ComponentHasTag(FName("MINE")))
 	{
+		ASkill_TrackingMine* Mine = Cast<ASkill_TrackingMine>(OtherComp->GetOwner());
+		if(Mine!=nullptr)
+		{
 		UE_LOG(LogTexture, Error,TEXT("mine"));
-		StatComp->SetDamage(50.0f);//임시값:유도지뢰의 데미지
+		StatComp->SetDamage(Mine->Damage);//임시값:유도지뢰의 데미지
 		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
 		if (AIController != nullptr)
 		{
 			AIController->SetFocus(TempCharacter);
 		}
 		OtherComp->GetOwner()->SetLifeSpan(0.5f);
+		}
 	}
 
 	if (StatComp->Health <= 0) //적 캐릭터 사망유무체크

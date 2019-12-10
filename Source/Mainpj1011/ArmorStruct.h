@@ -15,6 +15,7 @@ enum class EArmorType : uint8 //아이템 타입
 	Legs,
 	Hands,
 	Foots,
+	None,
 };
 UENUM(BlueprintType)
 enum class ERank : uint8 // 아이템 등급
@@ -24,6 +25,7 @@ enum class ERank : uint8 // 아이템 등급
 	Rare, //파란색
 	Epic, //보라색
 	Legendary, //노란색
+	None,
 };
 UENUM(BlueprintType)
 enum class EBrand : uint8 //브랜드 이름
@@ -31,6 +33,7 @@ enum class EBrand : uint8 //브랜드 이름
 	GilagardGroup, // 방어특화 브랜드
 	FenrirGroup, // 무기파워특화 브랜드
 	AlpsGroup, //스킬파워 특화 브랜드
+	None,
 };
 
 UCLASS()
@@ -58,21 +61,21 @@ struct FArmorPropertyStruct
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	EArmorType ArmorType;
+	EArmorType ArmorType = EArmorType::None;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	FName ArmorName;
+	FName ArmorName  = FName();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float WeaponPower;
+	float WeaponPower = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SkillPower;
+	float SkillPower = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)	
-	float Health;
+	float Health = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString MeshRefText;
+	FString MeshRefText = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ERank Rank;
+	ERank Rank = ERank::None;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EBrand Brand;
+	EBrand Brand = EBrand::None;
 };
 
 bool operator==(const FArmorPropertyStruct& Property1, const FArmorPropertyStruct& Property2);

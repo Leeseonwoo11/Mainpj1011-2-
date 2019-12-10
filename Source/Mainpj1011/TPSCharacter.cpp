@@ -2,11 +2,17 @@
 
 
 #include "TPSCharacter.h"
+#include "Weapon.h"
 #include "Weapon_Pistol.h"
 #include "Weapon_AR.h"
 #include "Weapon_SR.h"
 #include "DrawDebugHelpers.h"
+#include "BulletPoolComponent.h"
+#include "TPSCharacterStatComponent.h"
+#include "EquipmentComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
+#include "InventoryComponent.h"
 #include "TableManager.h"
 
 
@@ -26,11 +32,10 @@ ATPSCharacter::ATPSCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetCapsuleComponent());
-
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-
 	SetCameraOption();
+
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIMBP_BODY(TEXT("/Game/MyNew/Animation/CharacterAnim/CharacterAnimation"));
 	if (ANIMBP_BODY.Succeeded())
@@ -45,9 +50,8 @@ ATPSCharacter::ATPSCharacter()
 	PerceptionSource->RegisterWithPerceptionSystem();
 
 	PlayerStatComp = CreateDefaultSubobject<UTPSCharacterStatComponent>(TEXT("PlayerStatComp"));
-
-	//------
 	Inven = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("Equipment"));
 }
 
 // Called when the game starts or when spawned
@@ -208,6 +212,7 @@ void ATPSCharacter::ChangeAimLocation()
 		SpringArm->TargetArmLength = 100.0f;
 		SpringArm->SetRelativeRotation(FRotator(-5.0f, 10.0f, 0.0f));
 		SpringArm->SetRelativeLocation(FVector(0.0f, -65.0f, 85.0f));
+		
 	}
 	else
 	{
@@ -642,19 +647,6 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 	{
 		PlayerStatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
 	}
-	if (OtherComp->ComponentHasTag(FName("SpawnArmor")))
-	{
-		ASpawningArmor* SpawnedArmor = Cast<ASpawningArmor>(OtherComp->GetOwner());
-		if (SpawnedArmor != nullptr)
-		{
-			TempArmorArray.Add(SpawnedArmor);
-			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor in Inventory"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("ITEM:: SpawningArmor is nullptr"));
-		}
-	}
 }
 
 bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & OutSeenLocation, int32 & NumberOfLoSChecksPerformed, float & OutSightStrength, const AActor * IgnoreActor) const
@@ -681,17 +673,16 @@ bool ATPSCharacter::CanBeSeenFrom(const FVector & ObserverLocation, FVector & Ou
 
 void ATPSCharacter::AddInventory()
 {
-	for (auto TempArmor : TempArmorArray)
-	{
+	for (auto TempArmor : TempArmorArray) // TempArmorArray는 SpawningArmor액터에서 Add와 Remove가 실행된다.
+	{										//캐릭터와 겹치면 추가되고 겹침이끝나면 제거된다.
 		if (TempArmor->IsEatableItem)
 		{
 			Inven->AddInventroyItem(TempArmor->ArmorProperty);
-			TempArmor->Destroy();
-			TempArmorArray.RemoveSingle(TempArmor);
+			TempArmor->IsEattenItem = true;
 		}
 		else
 		{
-			TempArmorArray.RemoveSingle(TempArmor);
+			UE_LOG(LogTemp, Warning, TEXT("NoAddInven"));
 		}
 	}
 }

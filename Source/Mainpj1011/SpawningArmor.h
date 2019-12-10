@@ -73,8 +73,7 @@ public:
 	//아이템 먹을수 있는지 체크 bool
 	UPROPERTY()
 	bool IsEatableItem = false;
-	UFUNCTION()
-	void DestroyArmorActor();
-
+	UPROPERTY()
+	bool IsEattenItem = false;
 
 };

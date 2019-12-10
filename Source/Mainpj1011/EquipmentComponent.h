@@ -5,19 +5,17 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "SpawningArmor.h"
-#include "TPSCharacterStatComponent.generated.h"
+#include "EquipmentComponent.generated.h"
 
-
-//DECLARE_MULTICAST_DELEGATE(FCharHPUpdateDeleate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MAINPJ1011_API UTPSCharacterStatComponent : public UActorComponent
+class MAINPJ1011_API UEquipmentComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UTPSCharacterStatComponent();
+	UEquipmentComponent();
 
 protected:
 	// Called when the game starts
@@ -26,24 +24,20 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	float PlayerHealth = 100.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float PlayerAttackPower = 0.0f;
+	FArmorPropertyStruct EquipHead;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float PlayerSkillPower = 0.0f;
+	FArmorPropertyStruct EquipChest;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FArmorPropertyStruct EquipLegs;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FArmorPropertyStruct EquipShoulders;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FArmorPropertyStruct EquipHands;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FArmorPropertyStruct EquipFoots;
 
-	UFUNCTION()
-	void SetDamage(float Damage);
 	UFUNCTION(BlueprintCallable)
-	float GetHPRatio();
+	void WearingArmor(FArmorPropertyStruct NewArmor);
 
-	class ATPSCharacter* TempTPSCharacter;
-
-	void SetEquipmentAbility();
-
-
-	//µ®∏Æ∞‘¿Ã∆Æ
-	//FCharHPUpdateDeleate CharHPUpdateDeleate;	
 };

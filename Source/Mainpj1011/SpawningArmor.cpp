@@ -95,6 +95,10 @@ void ASpawningArmor::Tick(float DeltaTime)
 
 	FRotator WidgetRot = UKismetMathLibrary::FindLookAtRotation(WidgetComponent->GetComponentLocation(), TempCharacter->Camera->GetComponentLocation());
 	WidgetComponent->SetWorldRotation(WidgetRot);
+	if (IsEattenItem)
+	{
+		Destroy();
+	}
 }
 
 
@@ -245,6 +249,7 @@ void ASpawningArmor::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedCom
 	{
 		WidgetComponent->SetVisibility(true);
 		IsEatableItem = true;
+		TempCharacter->TempArmorArray.Add(this);
 	}
 }
 void ASpawningArmor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -253,12 +258,10 @@ void ASpawningArmor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* O
 	{
 		WidgetComponent->SetVisibility(false);
 		IsEatableItem = false;
+		TempCharacter->TempArmorArray.Remove(this);
 	}
 }
 
-void ASpawningArmor::DestroyArmorActor()
-{
-	Destroy();
-}
+
 
 

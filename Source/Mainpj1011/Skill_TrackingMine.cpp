@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "Particles/ParticleSystem.h"
 #include "DrawDebugHelpers.h"
+#include "TPSCharacter.h"
+#include "TPSCharacterStatComponent.h"
 
 ASkill_TrackingMine::ASkill_TrackingMine()
 {
@@ -63,6 +65,11 @@ void ASkill_TrackingMine::BeginPlay()
 {
 	Super::BeginPlay();
 	DetectRange->OnComponentBeginOverlap.AddDynamic(this, &ASkill_TrackingMine::OnActorBeginOverlap);
+	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (TempCharacter != nullptr)
+	{
+		Damage+=TempCharacter->PlayerStatComp->PlayerSkillPower;
+	}
 }
 
 void ASkill_TrackingMine::Tick(float DeltaTime)

@@ -3,6 +3,7 @@
 
 #include "Skill_Support.h"
 #include "TPSCharacter.h"
+#include "TPSCharacterStatComponent.h"
 
 ASkill_Support::ASkill_Support()
 {

@@ -3,13 +3,8 @@
 #pragma once
 
 #include "EngineMinimal.h"
-#include "Weapon.h"
-#include "BulletPoolComponent.h"
 #include "GameFramework/Character.h"
-#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISightTargetInterface.h"
-#include "TPSCharacterStatComponent.h"
-#include "InventoryComponent.h"
 #include "SpawningArmor.h"
 #include "TPSCharacter.generated.h"
 
@@ -43,18 +38,16 @@ public:
 	UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
-	UBulletPoolComponent* BulletPool;
+	class UBulletPoolComponent* BulletPool;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	UTPSCharacterStatComponent* PlayerStatComp;
+	class UTPSCharacterStatComponent* PlayerStatComp;
 
 	//카메라옵션
 	void SetCameraOption();
-	
 	void Up(float NewAxisValue);
 	void Down(float NewAxisValue);
 	void LeftRight(float NewAxisValue);
-
 	FVector DirectionToMove = FVector::ZeroVector;
 
 	//조준,조준애니메이션
@@ -149,11 +142,11 @@ public:
 	FRotator GetAimOffsets() const;
 
 	//무기슬롯
-	AWeapon* WeaponSlot1; //1번무기
-	AWeapon* WeaponSlot2; //2번무기
-	AWeapon* WeaponSlot3; //3번무기
+	class AWeapon* WeaponSlot1; //1번무기
+	class AWeapon* WeaponSlot2; //2번무기
+	class AWeapon* WeaponSlot3; //3번무기
 	UPROPERTY(VisibleAnywhere)
-	AWeapon* CurWeapon = nullptr;  // 현재무기
+	class AWeapon* CurWeapon = nullptr;  // 현재무기
 	
 	//연사유무
 	UPROPERTY(BlueprintReadOnly)
@@ -186,13 +179,18 @@ public:
 	
 	//인벤토리컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UInventoryComponent* Inven;
+	class UInventoryComponent* Inven;
 	//인벤토리 아이템 추가
 	UFUNCTION()
 	void AddInventory();
 	//인벤토리에 들어가기전에 임시로 들어가있는 아이템배열
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<ASpawningArmor*> TempArmorArray;
+	//장비컴포넌트 장착한 장비를 가지고있음
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UEquipmentComponent* EquipmentComponent;
+
+
 
 };
 
