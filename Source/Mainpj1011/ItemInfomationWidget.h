@@ -4,8 +4,6 @@
 
 #include "EngineMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ArmorStruct.h"
-#include "SpawningArmor.h"
 #include "ItemInfomationWidget.generated.h"
 
 /**
@@ -17,7 +15,8 @@ class MAINPJ1011_API UItemInfomationWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void bindArmor(class ASpawningArmor* NewArmor);
+	void BindArmor(class ASpawningArmor* NewArmor);
+	void BindWeapon(class ASpawningWeapon* NewWeapon);
 
 protected:
 	virtual void NativeConstruct();
@@ -26,9 +25,11 @@ private:
 	class UTextBlock* TypeName;
 	class UBorder* Border;
 	TWeakObjectPtr<class ASpawningArmor> SpawningArmor;
+	TWeakObjectPtr<class ASpawningWeapon> SpawningWeapon;
 
 public:
-	void UpdateWidget();
+	void UpdateArmorWidget();
+	void UpadateWeaponWidget();
 
 
 };

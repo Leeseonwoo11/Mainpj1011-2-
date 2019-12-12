@@ -32,11 +32,11 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-void UInventoryComponent::AddInventroyItem(FArmorPropertyStruct Item)
+void UInventoryComponent::AddInventroyArmor(FArmorPropertyStruct Armor)
 {
-	if (Inventory.Num() <= InventorySize)
+	if (ArmorInventory.Num() <= ArmorInventorySize)
 	{
-		Inventory.Add(Item);
+		ArmorInventory.Add(Armor);
 	}
 	else
 	{
@@ -44,14 +44,38 @@ void UInventoryComponent::AddInventroyItem(FArmorPropertyStruct Item)
 	}
 }
 
-void UInventoryComponent::RemoveInventoryItem(FArmorPropertyStruct Item)
+void UInventoryComponent::RemoveInventoryArmor(FArmorPropertyStruct Armor)
 {
-	for (auto InvenItem : Inventory)
+	for (auto InvenItem : ArmorInventory)
 	{
-		if (InvenItem == Item)
+		if (InvenItem == Armor)
 		{
-			UE_LOG(LogTexture, Error, TEXT("Item is Same"));
-			Inventory.RemoveSingle(Item);
+			UE_LOG(LogTexture, Error, TEXT("Armor is Same"));
+			ArmorInventory.RemoveSingle(Armor);
+		}
+	}
+}
+
+void UInventoryComponent::AddInventroyWeapon(FWeaponPropertyStruct Weapon)
+{
+	if (WeaponInventory.Num() <= WeaponInventorySize)
+	{
+		WeaponInventory.Add(Weapon);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Inventory is full!"));
+	}
+}
+
+void UInventoryComponent::RemoveInventoryWeapon(FWeaponPropertyStruct Weapon)
+{
+	for (auto InvenItem : WeaponInventory)
+	{
+		if (InvenItem == Weapon)
+		{
+			UE_LOG(LogTexture, Error, TEXT("Armor is Same"));
+			WeaponInventory.RemoveSingle(Weapon);
 		}
 	}
 }

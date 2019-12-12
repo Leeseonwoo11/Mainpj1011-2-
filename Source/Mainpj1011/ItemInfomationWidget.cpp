@@ -4,8 +4,12 @@
 #include "ItemInfomationWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
+#include "SpawningArmor.h"
+#include "SpawningWeapon.h"
+#include "ArmorStruct.h"
+#include "WeaponStruct.h"
 
-void UItemInfomationWidget::bindArmor(ASpawningArmor* NewArmor)
+void UItemInfomationWidget::BindArmor(ASpawningArmor* NewArmor)
 {
 	if (NewArmor == nullptr)
 	{
@@ -14,7 +18,19 @@ void UItemInfomationWidget::bindArmor(ASpawningArmor* NewArmor)
 	}
 	UE_LOG(LogTemp, Error, TEXT("NewArmor is not nullptr"));
 	SpawningArmor = NewArmor;
-	UpdateWidget();
+	UpdateArmorWidget();
+}
+
+void UItemInfomationWidget::BindWeapon(ASpawningWeapon * NewWeapon)
+{
+	if (NewWeapon == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NewWeapon is nullptr"));
+		return;
+	}
+	UE_LOG(LogTemp, Error, TEXT("NewWeapon is not nullptr"));
+	SpawningWeapon = NewWeapon;
+	UpadateWeaponWidget();
 }
 
 void UItemInfomationWidget::NativeConstruct()
@@ -36,25 +52,25 @@ void UItemInfomationWidget::NativeConstruct()
 	}
 }
 
-void UItemInfomationWidget::UpdateWidget()
+void UItemInfomationWidget::UpdateArmorWidget()
 {
 	BrandName->SetText(FText::FromString(SpawningArmor->BrandName));
 	TypeName->SetText(FText::FromString(SpawningArmor->TypeName));
 	switch (SpawningArmor->ArmorProperty.Rank)
 	{
-	case ERank::Common:
+	case EArmorRank::Common:
 		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 255.0f, 0.5f));//Èò»ö
 		break;
-	case ERank::UnCommon:
+	case EArmorRank::UnCommon:
 		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 0.0f, 0.5f));//ÃÊ·Ï
 		break;
-	case ERank::Rare:
+	case EArmorRank::Rare:
 		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 255.0f, 0.5f));//½Ã¾È
 		break;
-	case ERank::Epic:
+	case EArmorRank::Epic:
 		Border->SetBrushColor(FLinearColor(255.0f,0.0f,255.0f, 0.5f));//¸¶Á¨Å¸
 		break;
-	case ERank::Legendary:
+	case EArmorRank::Legendary:
 		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 0.0f,0.5f)); //³ë¶û
 		break;
 	default:
@@ -62,5 +78,30 @@ void UItemInfomationWidget::UpdateWidget()
 	}
 	
 	//-------------------------------------------------------------
+}
+
+void UItemInfomationWidget::UpadateWeaponWidget()
+{
+	BrandName->SetText(FText::FromString(SpawningWeapon->FullName));
+	switch (SpawningWeapon->WeaponProperty.Rank)
+	{
+	case EWeaponRank::Common:
+		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 255.0f, 0.5f));//Èò»ö
+		break;
+	case EWeaponRank::UnCommon:
+		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 0.0f, 0.5f));//ÃÊ·Ï
+		break;
+	case EWeaponRank::Rare:
+		Border->SetBrushColor(FLinearColor(0.0f, 255.0f, 255.0f, 0.5f));//½Ã¾È
+		break;
+	case EWeaponRank::Epic:
+		Border->SetBrushColor(FLinearColor(255.0f, 0.0f, 255.0f, 0.5f));//¸¶Á¨Å¸
+		break;
+	case EWeaponRank::Legendary:
+		Border->SetBrushColor(FLinearColor(255.0f, 255.0f, 0.0f, 0.5f)); //³ë¶û
+		break;
+	default:
+		break;
+	}
 }
 

@@ -61,28 +61,8 @@ void ATPSCharacter::BeginPlay()
 	Tags.Add(TEXT("PLAYER"));
 	GetMesh()->SetGenerateOverlapEvents(true);
 
-	auto Pistol = GetWorld()->SpawnActor<AWeapon_Pistol>(FVector::ZeroVector, FRotator::ZeroRotator);
-	WeaponSlot3 = Pistol;
-	if (Pistol != nullptr)
-	{
-		Pistol->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
-	}
-
-	auto AssaultRifle = GetWorld()->SpawnActor<AWeapon_AR>(FVector::ZeroVector, FRotator::ZeroRotator);
-	WeaponSlot1 = AssaultRifle;
-	if (AssaultRifle != nullptr)
-	{
-		AssaultRifle->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
-	}
-	auto SniperRifle = GetWorld()->SpawnActor<AWeapon_SR>(FVector::ZeroVector, FRotator::ZeroRotator);
-	WeaponSlot2 = SniperRifle;
-	if (SniperRifle != nullptr)
-	{
-		SniperRifle->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon2_Socket"));
-	}
 	SetWeapon3();
 	SetFalseCoverState();
-
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacter::OnComponentBeginOverlap);
 }
 
@@ -110,14 +90,17 @@ void ATPSCharacter::Tick(float DeltaTime)
 		CurWeaponDamage = CurWeapon->Damage;
 	}
 	//UE_LOG(LogTemp, Error, TEXT("Player HP = %f"), PlayerStatComp->PlayerHealth);
-	if (CurWeapon->AMMO <= 0)
+	if (CurWeapon != nullptr)
 	{
-		GetWorldTimerManager().ClearTimer(FireSpeedTimer);
-		bFireState = false;
-		if (bAutoFireRelaodFlag)
+		if (CurWeapon->AMMO <= 0)
 		{
-			bAutoFireRelaodFlag = false;
-			preReload();
+			GetWorldTimerManager().ClearTimer(FireSpeedTimer);
+			bFireState = false;
+			if (bAutoFireRelaodFlag)
+			{
+				bAutoFireRelaodFlag = false;
+				preReload();
+			}
 		}
 	}
 	if (PlayerStatComp != nullptr)
@@ -249,90 +232,92 @@ void ATPSCharacter::SetFalseFireState()
 void ATPSCharacter::preFire() //발사전에 준비
 {
 	bAutoFireRelaodFlag = true; //자동장전플래그 
-
-	switch (CurrentWeaponSlot)
+	if (CurWeapon != nullptr)
 	{
-	case WeaponNum::Pistol:
-		if (FireCheckFlag == true)
+		switch (CurrentWeaponSlot)
 		{
-			if (CurWeapon->AMMO > 0)
-			{
-				FireCheckFlag = false;
-				bFireState = true;
-				Fire();
-				GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
-			}
-			else//발사하려는데 총알이 없다면 재장전해라.
-			{
-				preReload();
-			}
-		}
-		break;
-	case WeaponNum::Weapon1:
-		if (WeaponSlot1->WeaponType == EWeaponType::SR)
-		{
+		case EWeaponNum::Pistol:
 			if (FireCheckFlag == true)
 			{
-				if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+				if (CurWeapon->AMMO > 0)
 				{
+					FireCheckFlag = false;
+					bFireState = true;
+					Fire();
+					GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+				}
+				else//발사하려는데 총알이 없다면 재장전해라.
+				{
+					preReload();
+				}
+			}
+			break;
+		case EWeaponNum::Weapon1:
+			if (WeaponSlot1->WeaponType == EWeaponType::SR)
+			{
+				if (FireCheckFlag == true)
+				{
+					if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+					{
 
-					FireCheckFlag = false;
-					bFireState = true;
-					Fire();
-					GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+						FireCheckFlag = false;
+						bFireState = true;
+						Fire();
+						GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+					}
+					else //발사하려는데 총알이 없다면 재장전해라.
+					{
+						preReload();
+					}
 				}
-				else //발사하려는데 총알이 없다면 재장전해라.
-				{
-					preReload();
-				}
 			}
-		}
-		else if (WeaponSlot1->WeaponType == EWeaponType::AR)
-		{
-			if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
-			{
-				float Fireduration = 60.0f / (float)WeaponSlot1->RPM;
-				bFireState = true;
-				GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
-			}
-			else //발사하려는데 총알이 없다면 재장전해라.
-			{
-				preReload();
-			}
-		}
-		break;
-	case WeaponNum::Weapon2:
-		if (WeaponSlot2->WeaponType == EWeaponType::SR)
-		{
-			if (FireCheckFlag == true)
+			else if (WeaponSlot1->WeaponType == EWeaponType::AR)
 			{
 				if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
 				{
-					FireCheckFlag = false;
+					float Fireduration = 60.0f / (float)WeaponSlot1->RPM;
 					bFireState = true;
-					Fire();
-					GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+					GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
 				}
 				else //발사하려는데 총알이 없다면 재장전해라.
 				{
 					preReload();
 				}
 			}
-		}
-		else if (WeaponSlot2->WeaponType == EWeaponType::AR)
-		{
-			if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+			break;
+		case EWeaponNum::Weapon2:
+			if (WeaponSlot2->WeaponType == EWeaponType::SR)
 			{
-				float Fireduration = 60.0f / (float)WeaponSlot2->RPM;
-				bFireState = true;
-				GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
+				if (FireCheckFlag == true)
+				{
+					if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+					{
+						FireCheckFlag = false;
+						bFireState = true;
+						Fire();
+						GetWorldTimerManager().SetTimer(FireCheckTimer, this, &ATPSCharacter::FireCheck, (60.0f / (float)CurWeapon->RPM), false, (60.0f / (float)CurWeapon->RPM)); //RPM을 초과하는 연사방지
+					}
+					else //발사하려는데 총알이 없다면 재장전해라.
+					{
+						preReload();
+					}
+				}
 			}
-			else //발사하려는데 총알이 없다면 재장전해라.
+			else if (WeaponSlot2->WeaponType == EWeaponType::AR)
 			{
-				preReload();
+				if (CurWeapon->AMMO > 0) // 현재 총에 총알이 있다면 발사
+				{
+					float Fireduration = 60.0f / (float)WeaponSlot2->RPM;
+					bFireState = true;
+					GetWorldTimerManager().SetTimer(FireSpeedTimer, this, &ATPSCharacter::Fire, Fireduration, true);
+				}
+				else //발사하려는데 총알이 없다면 재장전해라.
+				{
+					preReload();
+				}
 			}
+			break;
 		}
-		break;
 	}
 }
 
@@ -423,65 +408,70 @@ void ATPSCharacter::SetFalseChangeWeaponState()
 void ATPSCharacter::SetWeapon1()
 {
 	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
-	if (CurrentWeaponSlot != WeaponNum::Weapon1)
+	if (WeaponSlot1 != nullptr)
 	{
-		CurrentWeaponSlot = WeaponNum::Weapon1;
-		CurWeapon = WeaponSlot1;
-		bWeapon1 = true;
-		bWeapon2 = false;
-		bWeapon3 = false;
-		SetTrueChangeWeaponState();
-		//1번무기 장착
-		if (WeaponSlot1 != nullptr)
+		if (CurrentWeaponSlot != EWeaponNum::Weapon1)
 		{
-			if (WeaponSlot1->WeaponType == EWeaponType::AR)
+			CurrentWeaponSlot = EWeaponNum::Weapon1;
+			CurWeapon = WeaponSlot1;
+			bWeapon1 = true;
+			bWeapon2 = false;
+			bWeapon3 = false;
+			SetTrueChangeWeaponState();
+			//1번무기 장착
+			if (WeaponSlot1 != nullptr)
 			{
-				WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
+				if (WeaponSlot1->WeaponType == EWeaponType::AR)
+				{
+					WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
+				}
+				else if (WeaponSlot1->WeaponType == EWeaponType::SR)
+				{
+					WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_Socket"));
+				}
 			}
-			else if (WeaponSlot1->WeaponType == EWeaponType::SR)
-			{
-				WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_Socket"));
-			}
+			//2번무기 슬롯으로 이동
+			if (WeaponSlot2 != nullptr)
+				WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon2_Socket"));
+			//권총 슬롯으로 이동
+			if (WeaponSlot3 != nullptr)
+				WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
 		}
-		//2번무기 슬롯으로 이동
-		if (WeaponSlot2 != nullptr)
-			WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon2_Socket"));
-		//권총 슬롯으로 이동
-		if (WeaponSlot3 != nullptr)
-			WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
 	}
 }
 
 void ATPSCharacter::SetWeapon2()
 {
 	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
-
-	if (CurrentWeaponSlot != WeaponNum::Weapon2)
+	if (WeaponSlot2 != nullptr)
 	{
-		CurrentWeaponSlot = WeaponNum::Weapon2;
-		CurWeapon = WeaponSlot2;
-		bWeapon1 = false;
-		bWeapon2 = true;
-		bWeapon3 = false;
-		SetTrueChangeWeaponState();
-		//2번무기 장착
-		if (WeaponSlot2 != nullptr)
+		if (CurrentWeaponSlot != EWeaponNum::Weapon2)
 		{
-			if (WeaponSlot2->WeaponType == EWeaponType::AR)
+			CurrentWeaponSlot = EWeaponNum::Weapon2;
+			CurWeapon = WeaponSlot2;
+			bWeapon1 = false;
+			bWeapon2 = true;
+			bWeapon3 = false;
+			SetTrueChangeWeaponState();
+			//2번무기 장착
+			if (WeaponSlot2 != nullptr)
 			{
-				WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
+				if (WeaponSlot2->WeaponType == EWeaponType::AR)
+				{
+					WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
+				}
+				else if (WeaponSlot2->WeaponType == EWeaponType::SR)
+				{
+					WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_SRSocket"));
+				}
 			}
-			else if (WeaponSlot2->WeaponType == EWeaponType::SR)
-			{
-				WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_SRSocket"));
-			}
+			//권총 슬롯으로 이동
+			if (WeaponSlot3 != nullptr)
+				WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
+			//1번무기 슬롯으로 이동
+			if (WeaponSlot1 != nullptr)
+				WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
 		}
-		//권총 슬롯으로 이동
-		if (WeaponSlot3 != nullptr)
-		WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Pistol_Socket"));
-		//1번무기 슬롯으로 이동
-		if(WeaponSlot1 != nullptr)
-		WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
 	}
 }
 
@@ -489,23 +479,26 @@ void ATPSCharacter::SetWeapon3()
 {
 	GetWorldTimerManager().ClearTimer(FireSpeedTimer);
 
-	if (CurrentWeaponSlot != WeaponNum::Pistol)
+	if (WeaponSlot3 != nullptr)
 	{
-		CurrentWeaponSlot = WeaponNum::Pistol;
-		CurWeapon = WeaponSlot3;
-		bWeapon1 = false;
-		bWeapon2 = false;
-		bWeapon3 = true;
-		SetTrueChangeWeaponState();
-		//권총 장착
-		if (WeaponSlot3 != nullptr)
-		WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_PistolSocket"));
-		//2번무기 슬롯으로 이동
-		if (WeaponSlot2 != nullptr)
-		WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon2_Socket"));
-		//1번무기 슬롯으로 이동
-		if (WeaponSlot1 != nullptr)
-		WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
+		if (CurrentWeaponSlot != EWeaponNum::Pistol)
+		{
+			CurrentWeaponSlot = EWeaponNum::Pistol;
+			CurWeapon = WeaponSlot3;
+			bWeapon1 = false;
+			bWeapon2 = false;
+			bWeapon3 = true;
+			SetTrueChangeWeaponState();
+			//권총 장착
+			if (WeaponSlot3 != nullptr)
+				WeaponSlot3->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_PistolSocket"));
+			//2번무기 슬롯으로 이동
+			if (WeaponSlot2 != nullptr)
+				WeaponSlot2->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon2_Socket"));
+			//1번무기 슬롯으로 이동
+			if (WeaponSlot1 != nullptr)
+				WeaponSlot1->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
+		}
 	}
 }
 void ATPSCharacter::preReload() // 무기의 종류에 따라서 탄약의 최대 수와 탄창용량이 달라 무기의 타입을 비교 후 재장전함
@@ -677,8 +670,20 @@ void ATPSCharacter::AddInventory()
 	{										//캐릭터와 겹치면 추가되고 겹침이끝나면 제거된다.
 		if (TempArmor->IsEatableItem)
 		{
-			Inven->AddInventroyItem(TempArmor->ArmorProperty);
+			Inven->AddInventroyArmor(TempArmor->ArmorProperty);
 			TempArmor->IsEattenItem = true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("NoAddInven"));
+		}
+	}
+	for (auto TempWeapon : TempWeaponArray)
+	{
+		if (TempWeapon->IsEatableItem)
+		{
+			Inven->AddInventroyWeapon(TempWeapon->WeaponProperty);
+			TempWeapon->IsEattenItem = true;
 		}
 		else
 		{

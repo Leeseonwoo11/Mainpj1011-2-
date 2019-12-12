@@ -5,6 +5,7 @@
 #include "EngineMinimal.h"
 #include "Components/ActorComponent.h"
 #include "ArmorStruct.h"
+#include "WeaponStruct.h"
 #include "InventoryComponent.generated.h"
 
 
@@ -26,13 +27,22 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TArray<FArmorPropertyStruct> Inventory;
+	TArray<FArmorPropertyStruct> ArmorInventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 InventorySize = 100;
+	TArray<FWeaponPropertyStruct> WeaponInventory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ArmorInventorySize = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 WeaponInventorySize = 100;
+
 
 	UFUNCTION()
-	void AddInventroyItem(FArmorPropertyStruct Item);
+	void AddInventroyArmor(FArmorPropertyStruct Armor);
+	UFUNCTION()
+	void RemoveInventoryArmor(FArmorPropertyStruct Armor);
 
 	UFUNCTION()
-	void RemoveInventoryItem(FArmorPropertyStruct Item);
+	void AddInventroyWeapon(FWeaponPropertyStruct Weapon);
+	UFUNCTION()
+	void RemoveInventoryWeapon(FWeaponPropertyStruct Weapon);
 };

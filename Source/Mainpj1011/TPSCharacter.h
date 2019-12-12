@@ -6,10 +6,21 @@
 #include "GameFramework/Character.h"
 #include "Perception/AISightTargetInterface.h"
 #include "SpawningArmor.h"
+#include "SpawningWeapon.h"
 #include "TPSCharacter.generated.h"
 
 
 class UAIPerceptionStimuliSourceComponent;
+
+//무기 슬롯 이넘
+UENUM()
+enum class EWeaponNum
+{
+	Weapon1,
+	Weapon2,
+	Pistol,
+	None,
+};
 
 UCLASS()
 class MAINPJ1011_API ATPSCharacter : public ACharacter,public IAISightTargetInterface
@@ -152,16 +163,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bAutomaticFire;
 
-	//무기 슬롯 이넘
-	enum class WeaponNum
-	{
-		Weapon1,
-		Weapon2,
-		Pistol,
-	};
 	//현재무기이넘값
-	WeaponNum CurrentWeaponSlot = WeaponNum::Weapon1;
-
+	EWeaponNum CurrentWeaponSlot = EWeaponNum::None;
 
 	// 충돌체크
 	UFUNCTION()
@@ -186,12 +189,12 @@ public:
 	//인벤토리에 들어가기전에 임시로 들어가있는 아이템배열
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<ASpawningArmor*> TempArmorArray;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<ASpawningWeapon*> TempWeaponArray;
+
 	//장비컴포넌트 장착한 장비를 가지고있음
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipmentComponent* EquipmentComponent;
-
-
-
 };
 
 

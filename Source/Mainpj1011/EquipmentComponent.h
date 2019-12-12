@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "SpawningArmor.h"
+#include "SpawningWeapon.h"
 #include "EquipmentComponent.generated.h"
 
 
@@ -25,6 +26,13 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FWeaponPropertyStruct ARSlot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FWeaponPropertyStruct SRSlot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FWeaponPropertyStruct PistolSlot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FArmorPropertyStruct EquipHead;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FArmorPropertyStruct EquipChest;
@@ -39,5 +47,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void WearingArmor(FArmorPropertyStruct NewArmor);
+	UFUNCTION(BlueprintCallable)
+	void MountingWeapon(FWeaponPropertyStruct NewWeapon);
+
 
 };

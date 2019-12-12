@@ -4,16 +4,10 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponStruct.h"
 #include "Weapon.generated.h"
 
-UENUM()
-enum class EWeaponType
-{
-	NoWeapon,
-	PT,
-	AR,
-	SR,
-};
+
 
 UCLASS()
 class MAINPJ1011_API AWeapon : public AActor

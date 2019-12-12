@@ -18,7 +18,7 @@ enum class EArmorType : uint8 //아이템 타입
 	None,
 };
 UENUM(BlueprintType)
-enum class ERank : uint8 // 아이템 등급
+enum class EArmorRank : uint8 // 아이템 등급
 {
 	Common, //흰색
 	UnCommon, //녹색
@@ -73,7 +73,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString MeshRefText = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ERank Rank = ERank::None;
+	EArmorRank Rank = EArmorRank::None;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EBrand Brand = EBrand::None;
 };
