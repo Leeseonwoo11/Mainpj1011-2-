@@ -328,6 +328,7 @@ void ATPSCharacter::Fire()
 	FVector Start = Camera->GetComponentLocation();
 	FVector CamForwardVector = Camera->GetForwardVector();
 	bool Result = GetWorld()->LineTraceSingleByChannel(OutResult, Start, CamForwardVector*15000.0f + Start, ECC_GameTraceChannel1);
+	UGameplayStatics::GetPlayerController(GetWorld(),0)->AddPitchInput(-0.1*CurWeapon->Balance);
 	if (Result)
 	{
 		TargetLoc = OutResult.Location;

@@ -23,7 +23,7 @@ void AWeapon_SR::BeginPlay()
 	RPM = TableMgr->GetWeaponRPM(WeaponType);
 	AMMO = TableMgr->GetWeaponAMMO(WeaponType);
 	Total_AMMO = TableMgr->GetTotal_AMMO(WeaponType);
-
+	Balance = TableMgr->GetWeaponBalance(WeaponType);
 	UE_LOG(LogTemp, Error, TEXT("SR RPM is %d"), RPM);
 	UE_LOG(LogTemp, Error, TEXT("SR DMG is %f"), Damage);
 	UE_LOG(LogTemp, Error, TEXT("SR AMMO is %d"), AMMO);

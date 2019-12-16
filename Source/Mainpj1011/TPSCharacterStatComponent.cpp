@@ -35,7 +35,10 @@ void UTPSCharacterStatComponent::SetDamage(float Damage)
 {
 	if (Damage > 0)
 	{
-		PlayerHealth -= Damage;
+		if (PlayerHealth > 0)
+		{
+			PlayerHealth -= Damage;
+		}
 	}
 }
 
