@@ -28,7 +28,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	float PlayerHealth = 100.0f;
+	float PlayerHealth = PlayerMaxHealth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerMaxHealth = 100.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerAttackPower = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

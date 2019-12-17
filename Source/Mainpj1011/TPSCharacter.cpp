@@ -14,6 +14,11 @@
 #include "Perception/AISense_Sight.h"
 #include "InventoryComponent.h"
 #include "TableManager.h"
+#include "SkillObject.h"
+#include "Skill_Pulse.h"
+#include "Skill_Support.h"
+#include "Skill_TrackingMine.h"
+#include "AIController.h"
 
 
 // Sets default values
@@ -133,6 +138,9 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("DownKey", IE_Released, this, &ATPSCharacter::DownKeyRelease);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATPSCharacter::preReload); 
 	PlayerInputComponent->BindAction("Interaction", IE_Pressed, this, &ATPSCharacter::AddInventory);
+	PlayerInputComponent->BindAction("Skill_Q", IE_Pressed, this, &ATPSCharacter::ActiveSkill_Q);
+	PlayerInputComponent->BindAction("Skill_E", IE_Pressed, this, &ATPSCharacter::ActirveSkill_E);
+
 }
 void ATPSCharacter::SetCameraOption()
 {
@@ -671,8 +679,11 @@ void ATPSCharacter::AddInventory()
 	{										//캐릭터와 겹치면 추가되고 겹침이끝나면 제거된다.
 		if (TempArmor->IsEatableItem)
 		{
-			Inven->AddInventroyArmor(TempArmor->ArmorProperty);
-			TempArmor->IsEattenItem = true;
+
+			if (Inven->AddInventroyArmor(TempArmor->ArmorProperty))
+			{
+				TempArmor->IsEattenItem = true;
+			}
 		}
 		else
 		{
@@ -683,13 +694,116 @@ void ATPSCharacter::AddInventory()
 	{
 		if (TempWeapon->IsEatableItem)
 		{
-			Inven->AddInventroyWeapon(TempWeapon->WeaponProperty);
-			TempWeapon->IsEattenItem = true;
+			if (Inven->AddInventroyWeapon(TempWeapon->WeaponProperty))
+			{
+				TempWeapon->IsEattenItem = true;
+			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("NoAddInven"));
 		}
+	}
+}
+
+void ATPSCharacter::SetSkill_Q(int32 num)
+{
+	if (num == 1)
+	{
+		Skill_Q = num;
+		if (Skill_E == 1)
+		{
+			Skill_E = 0;
+		}
+	}
+	else if (num == 2)
+	{
+		Skill_Q = num;
+		if (Skill_E == 2)
+		{
+			Skill_E = 0;
+		}
+	}
+	else if (num == 3)
+	{
+		Skill_Q = num;
+		if (Skill_E == 3)
+		{
+			Skill_E = 0;
+		}
+	}
+}
+
+void ATPSCharacter::SetSkill_E(int32 num)
+{
+	if (num == 1)
+	{
+		Skill_E = num;
+		if (Skill_Q == 1)
+		{
+			Skill_Q = 0;
+		}
+	}
+	else if (num == 2)
+	{
+		Skill_E = num;
+		if (Skill_Q == 2)
+		{
+			Skill_Q = 0;
+		}
+	}
+	else if (num == 3)
+	{
+		Skill_E = num;
+		if (Skill_Q == 3)
+		{
+			Skill_Q = 0;
+		}
+	}
+}
+
+void ATPSCharacter::ActiveSkill_Q()
+{
+	if (Skill_Q != 0)
+	{
+		if(Skill_Q == 1)
+		{
+			auto QSkill_1 = GetWorld()->SpawnActor<ASkill_Pulse>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f),FRotator::ZeroRotator);
+		} 
+		else if (Skill_Q == 2)
+		{
+			auto QSkill_2 = GetWorld()->SpawnActor<ASkill_TrackingMine>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
+		}
+		else if (Skill_Q == 3)
+		{
+			auto QSkill_3 = GetWorld()->SpawnActor<ASkill_Support>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
+		}
+	}
+	else
+	{
+		
+	}
+}
+
+void ATPSCharacter::ActirveSkill_E()
+{
+	if (Skill_E != 0)
+	{
+		if (Skill_E == 1)
+		{
+			auto ESkill_1 = GetWorld()->SpawnActor<ASkill_Pulse>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
+		}
+		else if (Skill_E == 2)
+		{
+			auto ESkill_2 = GetWorld()->SpawnActor<ASkill_TrackingMine>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
+		}
+		else if (Skill_E == 3)
+		{
+			auto ESkill_3 = GetWorld()->SpawnActor<ASkill_Support>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
+		}
+	}
+	else
+	{
 	}
 }
 

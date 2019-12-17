@@ -44,7 +44,7 @@ void UTPSCharacterStatComponent::SetDamage(float Damage)
 
 float UTPSCharacterStatComponent::GetHPRatio()
 {
-	return PlayerHealth / 100.0f;
+	return PlayerHealth / PlayerMaxHealth;
 }
 
 void UTPSCharacterStatComponent::SetEquipmentAbility()
@@ -54,7 +54,7 @@ void UTPSCharacterStatComponent::SetEquipmentAbility()
 		auto EquipComp = TempTPSCharacter->EquipmentComponent;
 		PlayerAttackPower = EquipComp->EquipHead.WeaponPower+ EquipComp->EquipChest.WeaponPower+ EquipComp->EquipFoots.WeaponPower+ EquipComp->EquipHands.WeaponPower+ EquipComp->EquipLegs.WeaponPower+ EquipComp->EquipShoulders.WeaponPower;
 		PlayerSkillPower = EquipComp->EquipHead.SkillPower + EquipComp->EquipChest.SkillPower + EquipComp->EquipFoots.SkillPower + EquipComp->EquipHands.SkillPower + EquipComp->EquipLegs.SkillPower + EquipComp->EquipShoulders.SkillPower;
-		PlayerHealth = EquipComp->EquipHead.Health + EquipComp->EquipChest.Health + EquipComp->EquipFoots.Health + EquipComp->EquipHands.Health + EquipComp->EquipLegs.Health + EquipComp->EquipShoulders.Health+ 100; // 100은 기본값
+		PlayerMaxHealth = EquipComp->EquipHead.Health + EquipComp->EquipChest.Health + EquipComp->EquipFoots.Health + EquipComp->EquipHands.Health + EquipComp->EquipLegs.Health + EquipComp->EquipShoulders.Health+ 100; // 100은 기본값
 	}
 }
 

@@ -64,12 +64,15 @@ ASkill_TrackingMine::ASkill_TrackingMine()
 void ASkill_TrackingMine::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SpawnDefaultController();
 	DetectRange->OnComponentBeginOverlap.AddDynamic(this, &ASkill_TrackingMine::OnActorBeginOverlap);
 	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (TempCharacter != nullptr)
 	{
 		Damage+=TempCharacter->PlayerStatComp->PlayerSkillPower;
 	}
+
 }
 
 void ASkill_TrackingMine::Tick(float DeltaTime)

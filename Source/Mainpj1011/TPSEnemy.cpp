@@ -227,6 +227,7 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 			AIController->SetFocus(TempCharacter);
 		}
 		OtherComp->GetOwner()->SetLifeSpan(0.5f);
+		Cast<ASkill_TrackingMine>(OtherComp->GetOwner())->GetController()->Destroy();
 		}
 	}
 

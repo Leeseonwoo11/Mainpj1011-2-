@@ -19,7 +19,6 @@ ASkillObject::ASkillObject()
 void ASkillObject::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

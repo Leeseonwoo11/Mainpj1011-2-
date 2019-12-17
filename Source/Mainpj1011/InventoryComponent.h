@@ -31,18 +31,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FWeaponPropertyStruct> WeaponInventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ArmorInventorySize = 100;
+	int32 ArmorInventorySize = 12;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 WeaponInventorySize = 100;
+	int32 WeaponInventorySize = 6;
 
 
 	UFUNCTION()
-	void AddInventroyArmor(FArmorPropertyStruct Armor);
-	UFUNCTION()
+	bool AddInventroyArmor(FArmorPropertyStruct Armor);
+	UFUNCTION(BlueprintCallable)
 	void RemoveInventoryArmor(FArmorPropertyStruct Armor);
 
 	UFUNCTION()
-	void AddInventroyWeapon(FWeaponPropertyStruct Weapon);
-	UFUNCTION()
+	bool AddInventroyWeapon(FWeaponPropertyStruct Weapon);
+	UFUNCTION(BlueprintCallable)
 	void RemoveInventoryWeapon(FWeaponPropertyStruct Weapon);
 };

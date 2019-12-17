@@ -32,15 +32,17 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-void UInventoryComponent::AddInventroyArmor(FArmorPropertyStruct Armor)
+bool UInventoryComponent::AddInventroyArmor(FArmorPropertyStruct Armor)
 {
 	if (ArmorInventory.Num() <= ArmorInventorySize)
 	{
 		ArmorInventory.Add(Armor);
+		return true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Inventory is full!"));
+		return false;
 	}
 }
 
@@ -56,15 +58,17 @@ void UInventoryComponent::RemoveInventoryArmor(FArmorPropertyStruct Armor)
 	}
 }
 
-void UInventoryComponent::AddInventroyWeapon(FWeaponPropertyStruct Weapon)
+bool UInventoryComponent::AddInventroyWeapon(FWeaponPropertyStruct Weapon)
 {
 	if (WeaponInventory.Num() <= WeaponInventorySize)
 	{
 		WeaponInventory.Add(Weapon);
+		return true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Inventory is full!"));
+		return false;
 	}
 }
 

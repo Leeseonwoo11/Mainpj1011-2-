@@ -70,7 +70,10 @@ void ASkill_Support::HealCharacter()
 	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	if (TempCharacter != nullptr)
 	{
-		TempCharacter->PlayerStatComp->PlayerHealth += (5.0f + SkillPower / 50.0f);
-		UE_LOG(LogType, Error, TEXT("Healling........"));
+		if (TempCharacter->PlayerStatComp->PlayerHealth < TempCharacter->PlayerStatComp->PlayerMaxHealth)// 현재체력이 맥스체력보다 적다면
+		{
+			TempCharacter->PlayerStatComp->PlayerHealth += (5.0f + SkillPower / 50.0f);
+			UE_LOG(LogType, Error, TEXT("Healling........"));
+		}
 	}
 }

@@ -195,6 +195,20 @@ public:
 	//장비컴포넌트 장착한 장비를 가지고있음
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipmentComponent* EquipmentComponent;
+
+	//스킬 시전 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Skill_Q;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Skill_E;
+	UFUNCTION(BlueprintCallable)
+	void SetSkill_Q(int32 num);
+	UFUNCTION(BlueprintCallable)
+	void SetSkill_E(int32 num);
+	UFUNCTION()
+	void ActiveSkill_Q();
+	UFUNCTION()
+	void ActirveSkill_E();
 };
 
 
