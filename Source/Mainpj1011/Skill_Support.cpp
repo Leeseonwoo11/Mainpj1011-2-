@@ -42,6 +42,7 @@ void ASkill_Support::BeginPlay()
 	Aura->SetWorldScale3D(SkillRangeVector);
 	SkillRange->SetWorldScale3D(SkillRangeVector*4.0f);
 	this->SetLifeSpan(10.0f);
+	Cooltime = 10.0f;
 }
 void ASkill_Support::Tick(float DeltaTime)
 {

@@ -31,6 +31,7 @@ ASkill_Pulse::ASkill_Pulse()
 void ASkill_Pulse::BeginPlay()
 {
 	StartSearching();
+	Cooltime = 10.0f;
 }
 
 void ASkill_Pulse::Tick(float DeltaTime)

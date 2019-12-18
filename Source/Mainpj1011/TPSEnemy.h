@@ -63,6 +63,8 @@ public:
 	bool bFireState = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool bCrouchState = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsDead = false;
 	
 	//발사하기anim (애니메이션블루프린트에서 이 값들을 읽어서 모션을 바꿈)
 	UFUNCTION(BlueprintCallable)

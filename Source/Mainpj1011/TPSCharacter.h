@@ -197,6 +197,8 @@ public:
 	class UEquipmentComponent* EquipmentComponent;
 
 	//스킬 시전 
+	FInputActionBinding Skill_Q_Binding = FInputActionBinding("Skill_Q",IE_Pressed);
+	FInputActionBinding Skill_E_Binding = FInputActionBinding("Skill_E", IE_Pressed);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Skill_Q;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -206,9 +208,40 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSkill_E(int32 num);
 	UFUNCTION()
-	void ActiveSkill_Q();
+	void SpawnTrackingMine();
 	UFUNCTION()
-	void ActirveSkill_E();
+	void SpawnSupport();
+	UFUNCTION()
+	void SpawnPulseDetector();
+	UFUNCTION()
+	void NoSkill();
+	FTimerHandle PulseTimer;
+	FTimerHandle MineTimer;
+	FTimerHandle SupportTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bPulseCooldown = true;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bMineCooldown = true;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bSupportCooldown = true;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float PulseTimeValue = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float MineTimeValue = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float SupportTimeValue = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float PulseCoolTime = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float MineCoolTime = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float SupportCoolTime = 1.0f;
+	UFUNCTION()
+	void PulseCooltimeFunc();	
+	UFUNCTION()
+	void MineCooltimeFunc();
+	UFUNCTION()
+	void SupportCooltimeFunc();
 };
 
 

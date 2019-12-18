@@ -58,6 +58,7 @@ void ATPSEnemy::BeginPlay()
 	}
 	TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSEnemy::OnComponentBeginOverlap);
+	bIsDead = false;
 }
 
 void ATPSEnemy::PostInitializeComponents()
@@ -227,11 +228,10 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 			AIController->SetFocus(TempCharacter);
 		}
 		OtherComp->GetOwner()->SetLifeSpan(0.5f);
-		Cast<ASkill_TrackingMine>(OtherComp->GetOwner())->GetController()->Destroy();
 		}
 	}
 
-	if (StatComp->Health <= 0) //적 캐릭터 사망유무체크
+	if (StatComp->Health <= 0 && bIsDead==false) //적 캐릭터 사망유무체크
 	{
 		GetMesh()->SetSimulatePhysics(true);
 		ATPSAIController* TPSAIController = Cast<ATPSAIController>(GetController());
@@ -246,6 +246,7 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 			BulletPool->DestroyBulletPool();
 			CurWeapon->Destroy();
 			SetLifeSpan(1.5f);
+			bIsDead = true;
 		}
 	}
 }

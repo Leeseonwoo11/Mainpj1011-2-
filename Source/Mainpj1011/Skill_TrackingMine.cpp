@@ -72,6 +72,7 @@ void ASkill_TrackingMine::BeginPlay()
 	{
 		Damage+=TempCharacter->PlayerStatComp->PlayerSkillPower;
 	}
+	Cooltime = 10.0f;
 
 }
 

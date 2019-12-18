@@ -138,8 +138,7 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("DownKey", IE_Released, this, &ATPSCharacter::DownKeyRelease);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATPSCharacter::preReload); 
 	PlayerInputComponent->BindAction("Interaction", IE_Pressed, this, &ATPSCharacter::AddInventory);
-	PlayerInputComponent->BindAction("Skill_Q", IE_Pressed, this, &ATPSCharacter::ActiveSkill_Q);
-	PlayerInputComponent->BindAction("Skill_E", IE_Pressed, this, &ATPSCharacter::ActirveSkill_E);
+
 
 }
 void ATPSCharacter::SetCameraOption()
@@ -708,103 +707,174 @@ void ATPSCharacter::AddInventory()
 
 void ATPSCharacter::SetSkill_Q(int32 num)
 {
-	if (num == 1)
+	for (int32 i = 0; i < InputComponent->GetNumActionBindings(); i++) //Q에 바인드 되어있던 스킬이 있다면 초기화 해준다.
 	{
-		Skill_Q = num;
-		if (Skill_E == 1)
+		FInputActionBinding Binding = InputComponent->GetActionBinding(i);
+		if (Binding.GetActionName() == Skill_Q_Binding.GetActionName())
 		{
-			Skill_E = 0;
+			InputComponent->RemoveActionBinding(i);
 		}
 	}
-	else if (num == 2)
+
+	if (num == 1) //펄스
 	{
 		Skill_Q = num;
+		Skill_Q_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnPulseDetector);
+		InputComponent->AddActionBinding(Skill_Q_Binding);
+		if (Skill_E == 1) // Q에 저장된 스킬과 같은 스킬이 E에도 저장되 있다면 E에 저장된 스킬을 삭제해야 한다.
+		{
+			Skill_E = 0;
+			SetSkill_E(0); // E에 바인드된 스킬을 삭제하기 위해서 아무의미없는 0을 넣어 스킬셋 함수를 불러준다.
+		}
+	}
+	else if (num == 2) // 유도지뢰
+	{
+		Skill_Q = num;
+		Skill_Q_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnTrackingMine);
+		InputComponent->AddActionBinding(Skill_Q_Binding);
 		if (Skill_E == 2)
 		{
 			Skill_E = 0;
+			SetSkill_E(0);
 		}
 	}
-	else if (num == 3)
+	else if (num == 3) //지원소
 	{
 		Skill_Q = num;
+		Skill_Q_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnSupport);
+		InputComponent->AddActionBinding(Skill_Q_Binding);
 		if (Skill_E == 3)
 		{
 			Skill_E = 0;
+			SetSkill_E(0);
 		}
 	}
 }
 
 void ATPSCharacter::SetSkill_E(int32 num)
 {
-	if (num == 1)
+	for (int32 i = 0; i < InputComponent->GetNumActionBindings(); i++) // E 스킬 바인드 초기화
+	{
+		FInputActionBinding Binding = InputComponent->GetActionBinding(i);
+		if (Binding.GetActionName() == Skill_E_Binding.GetActionName())
+		{
+			InputComponent->RemoveActionBinding(i);
+		}
+	}
+
+	if (num == 1)// 1번은 펄스
 	{
 		Skill_E = num;
+		Skill_E_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnPulseDetector);
+		InputComponent->AddActionBinding(Skill_E_Binding);
 		if (Skill_Q == 1)
 		{
 			Skill_Q = 0;
+			SetSkill_Q(0);
 		}
 	}
-	else if (num == 2)
+	else if (num == 2) //2번은 유도지뢰
 	{
 		Skill_E = num;
+		Skill_E_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnTrackingMine);
+		InputComponent->AddActionBinding(Skill_E_Binding);
 		if (Skill_Q == 2)
 		{
 			Skill_Q = 0;
+			SetSkill_Q(0);
 		}
 	}
-	else if (num == 3)
+	else if (num == 3) //3번은 지원소
 	{
 		Skill_E = num;
+		Skill_E_Binding.ActionDelegate.BindDelegate(this, &ATPSCharacter::SpawnSupport);
+		InputComponent->AddActionBinding(Skill_E_Binding);
 		if (Skill_Q == 3)
 		{
 			Skill_Q = 0;
+			SetSkill_Q(0);
 		}
 	}
 }
 
-void ATPSCharacter::ActiveSkill_Q()
+void ATPSCharacter::SpawnTrackingMine()
 {
-	if (Skill_Q != 0)
+	FActorSpawnParameters Spawnparam;
+	Spawnparam.bNoFail = true;
+	if (bMineCooldown)
 	{
-		if(Skill_Q == 1)
-		{
-			auto QSkill_1 = GetWorld()->SpawnActor<ASkill_Pulse>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f),FRotator::ZeroRotator);
-		} 
-		else if (Skill_Q == 2)
-		{
-			auto QSkill_2 = GetWorld()->SpawnActor<ASkill_TrackingMine>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
-		}
-		else if (Skill_Q == 3)
-		{
-			auto QSkill_3 = GetWorld()->SpawnActor<ASkill_Support>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
-		}
-	}
-	else
-	{
-		
+		bMineCooldown = false;
+		auto TrackingMine = GetWorld()->SpawnActor<ASkill_TrackingMine>(GetActorLocation(), FRotator::ZeroRotator, Spawnparam);
+		MineCoolTime = TrackingMine->Cooltime;
+		MineTimeValue = 0.0f;
+		GetWorldTimerManager().SetTimer(MineTimer,this, &ATPSCharacter::MineCooltimeFunc, 0.1f,true);
 	}
 }
 
-void ATPSCharacter::ActirveSkill_E()
+void ATPSCharacter::SpawnSupport()
 {
-	if (Skill_E != 0)
+	FActorSpawnParameters Spawnparam;
+	Spawnparam.bNoFail = true;
+	if (bSupportCooldown)
 	{
-		if (Skill_E == 1)
-		{
-			auto ESkill_1 = GetWorld()->SpawnActor<ASkill_Pulse>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
-		}
-		else if (Skill_E == 2)
-		{
-			auto ESkill_2 = GetWorld()->SpawnActor<ASkill_TrackingMine>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
-		}
-		else if (Skill_E == 3)
-		{
-			auto ESkill_3 = GetWorld()->SpawnActor<ASkill_Support>(GetMesh()->GetComponentLocation() + FVector(0.0, 0.0, 60.0f), FRotator::ZeroRotator);
-		}
-	}
-	else
-	{
+		bSupportCooldown = false;
+		auto Support = GetWorld()->SpawnActor<ASkill_Support>(GetActorLocation(), FRotator::ZeroRotator, Spawnparam);
+		SupportCoolTime = Support->Cooltime;
+		SupportTimeValue = 0.0f;
+		GetWorldTimerManager().SetTimer(SupportTimer, this, &ATPSCharacter::SupportCooltimeFunc, 0.1f, true);
 	}
 }
+
+void ATPSCharacter::SpawnPulseDetector()
+{
+	FActorSpawnParameters Spawnparam;
+	Spawnparam.bNoFail = true;
+	if (bPulseCooldown)
+	{
+		bPulseCooldown = false;
+		auto PulseDetector = GetWorld()->SpawnActor<ASkill_Pulse>(GetActorLocation(), FRotator::ZeroRotator, Spawnparam);
+		PulseCoolTime = PulseDetector->Cooltime;
+		PulseTimeValue = 0.0f;
+		GetWorldTimerManager().SetTimer(PulseTimer, this, &ATPSCharacter::PulseCooltimeFunc, 0.1f, true);
+	}
+}
+
+void ATPSCharacter::NoSkill()
+{
+	UE_LOG(LogTemp, Error, TEXT("NoSkill"));
+}
+
+void ATPSCharacter::PulseCooltimeFunc()
+{
+	PulseTimeValue += 0.1f;
+	if (PulseCoolTime <= PulseTimeValue)
+	{
+		bPulseCooldown = true;
+		GetWorldTimerManager().ClearTimer(PulseTimer);
+	}
+}
+
+void ATPSCharacter::MineCooltimeFunc()
+{
+	MineTimeValue+=0.1f;
+	if (MineCoolTime <= MineTimeValue)
+	{
+		bMineCooldown = true;
+		GetWorldTimerManager().ClearTimer(MineTimer);
+	}
+}
+
+void ATPSCharacter::SupportCooltimeFunc()
+{
+	SupportTimeValue += 0.1f;
+	if (SupportCoolTime <= SupportTimeValue)
+	{
+		bSupportCooldown = true;
+		GetWorldTimerManager().ClearTimer(SupportTimer);
+	}
+}
+
+
+
 
 
