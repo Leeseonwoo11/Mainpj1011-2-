@@ -101,11 +101,6 @@ void ATPSCharacter::Tick(float DeltaTime)
 		{
 			GetWorldTimerManager().ClearTimer(FireSpeedTimer);
 			bFireState = false;
-			if (bAutoFireRelaodFlag)
-			{
-				bAutoFireRelaodFlag = false;
-				preReload();
-			}
 		}
 	}
 	if (PlayerStatComp != nullptr)
@@ -215,6 +210,18 @@ void ATPSCharacter::ChangeAimLocation()
 //발사상태 설정
 void ATPSCharacter::SetTrueFireState()
 {
+
+	if (CurWeapon != nullptr)
+	{
+		if (CurWeapon->AMMO <= 0)
+		{
+			if (bAutoFireRelaodFlag)
+			{
+				bAutoFireRelaodFlag = false;
+				preReload();
+			}
+		}
+	}
 	if (!bSprintState)
 	{
 		if (!IsReload) 
@@ -229,6 +236,7 @@ void ATPSCharacter::SetTrueFireState()
 			preFire();
 		}
 	}
+
 }
 void ATPSCharacter::SetFalseFireState()
 {
