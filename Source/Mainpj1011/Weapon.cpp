@@ -13,13 +13,20 @@ AWeapon::AWeapon()
 	FirePos = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FIREPOS"));
 	FirePos->SetupAttachment(WeaponBody);
 	WeaponType = EWeaponType::NoWeapon;
+	MuzzleFlash = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleComponent"));
+	MuzzleFlash->SetupAttachment(FirePos);
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_FLASH(TEXT("/Game/MyNew/Particle/FireEffect/MuzzleFlash"));
+	if (PS_FLASH.Succeeded())
+	{
+		MuzzleFlash->SetTemplate(PS_FLASH.Object);
+	}
 }
 
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
+	MuzzleFlash->SetActive(false);
 }
 
 // Called every frame

@@ -150,7 +150,7 @@ void ATPSEnemy::Fire()
 				TempBullet->Damage = CurWeapon->Damage;
 				TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 				TempBullet->SetActorRotation(BulletRot);
-				TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
+				TempBullet->ProjectileMovement->Velocity = FireVector * 151200; // 적의 총알의 속도는 너무빠르면 플레이어가 보이면 플레이어는 죽음 그래서 총알 속도가 더 적다.
 				TempBullet->SetActive(true);
 				TempBullet->BulletTrail->Activate(true);
 				DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Red, false, 1.0f);

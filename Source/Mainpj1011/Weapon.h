@@ -30,6 +30,8 @@ public:
 	USkeletalMeshComponent* WeaponBody;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* FirePos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UParticleSystemComponent* MuzzleFlash;
 	UPROPERTY(EditAnywhere)
 	int32 AMMO = 1;
 	UPROPERTY(EditAnywhere)

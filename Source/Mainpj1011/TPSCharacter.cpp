@@ -210,7 +210,6 @@ void ATPSCharacter::ChangeAimLocation()
 //발사상태 설정
 void ATPSCharacter::SetTrueFireState()
 {
-
 	if (CurWeapon != nullptr)
 	{
 		if (CurWeapon->AMMO <= 0)
@@ -342,7 +341,7 @@ void ATPSCharacter::Fire()
 	FHitResult OutResult;
 	FVector Start = Camera->GetComponentLocation();
 	FVector CamForwardVector = Camera->GetForwardVector();
-	bool Result = GetWorld()->LineTraceSingleByChannel(OutResult, Start, CamForwardVector*15000.0f + Start, ECC_GameTraceChannel1);
+	bool Result = GetWorld()->LineTraceSingleByChannel(OutResult, Start, CamForwardVector*151200000.0f + Start, ECC_GameTraceChannel1);
 	UGameplayStatics::GetPlayerController(GetWorld(),0)->AddPitchInput(-0.1*CurWeapon->Balance);
 	if (Result)
 	{
@@ -357,6 +356,14 @@ void ATPSCharacter::Fire()
 		{
 			UE_LOG(LogTemp, Error, TEXT("fire Loc is  x = %f,y = %f, z = %f"), CurWeapon->FirePos->GetComponentLocation().X, CurWeapon->FirePos->GetComponentLocation().Y, CurWeapon->FirePos->GetComponentLocation().Z);
 
+			//Muzzleflash 효과
+			CurWeapon->MuzzleFlash->SetActive(true);
+			if (CurWeapon->MuzzleFlash->IsActive())
+			{
+				CurWeapon->MuzzleFlash->SetActive(false);
+				CurWeapon->MuzzleFlash->SetActive(true);
+			}
+			//발사
 			FVector FireVector = (TargetLoc - CurWeapon->FirePos->GetComponentLocation()).GetSafeNormal();
 			FRotator BulletRot = GetActorRotation();
 			BulletRot.Pitch = CurWeapon->FirePos->GetComponentRotation().Pitch + 3.0f;
@@ -364,11 +371,11 @@ void ATPSCharacter::Fire()
 			TempBullet->Damage = CurWeapon->Damage+ PlayerStatComp->PlayerAttackPower; //무기의 데미지 + 플레이어 공격파워
 			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 			TempBullet->SetActorRotation(BulletRot);
-			TempBullet->ProjectileMovement->Velocity = FireVector * 12000;
+			TempBullet->ProjectileMovement->Velocity = FireVector *30051200 ; //
 			TempBullet->SetActive(true);
 			TempBullet->BulletTrail->Activate(true);
 
-			//DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
+			DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
 			CurWeapon->AMMO -= 1; // 발사할때마다 현재 총의 총알을 1빼준다.
 			UE_LOG(LogTemp, Error, TEXT("Remain Ammo  = %d"), CurWeapon->AMMO);
 		}

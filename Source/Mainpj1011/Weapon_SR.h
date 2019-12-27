@@ -16,4 +16,9 @@ class MAINPJ1011_API AWeapon_SR : public AWeapon
 	AWeapon_SR();
 protected:
 	virtual void BeginPlay() override;
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetScopeMode();
+	UFUNCTION(BlueprintCallable)
+	void SetAimMode();
 };

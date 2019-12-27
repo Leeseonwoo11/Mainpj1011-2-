@@ -3,6 +3,7 @@
 
 #include "Weapon_SR.h"
 #include "TableManager.h"
+#include "TPSCharacter.h"
 
 AWeapon_SR::AWeapon_SR()
 {
@@ -29,4 +30,15 @@ void AWeapon_SR::BeginPlay()
 	UE_LOG(LogTemp, Error, TEXT("SR AMMO is %d"), AMMO);
 	UE_LOG(LogTemp, Error, TEXT("SR Total AMMO is %d"), Total_AMMO);
 
+}
+
+void AWeapon_SR::SetScopeMode()
+{
+	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	FirePos->SetWorldLocation(TempCharacter->Camera->GetComponentLocation());
+}
+
+void AWeapon_SR::SetAimMode()
+{
+	FirePos->SetRelativeLocation(FVector(0.0f, 80.0f, 14.0f));
 }

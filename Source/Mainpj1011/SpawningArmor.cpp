@@ -17,6 +17,7 @@ ASpawningArmor::ASpawningArmor()
 	InteractionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractionBox"));
 	InteractionBox->SetRelativeScale3D(FVector(5, 5, 5));
 	InteractionBox->ComponentTags.Add(TEXT("SpawnArmor"));
+	InteractionBox->SetCollisionProfileName(TEXT("Item"));
 	RootComponent = InteractionBox;
 
 	Particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));

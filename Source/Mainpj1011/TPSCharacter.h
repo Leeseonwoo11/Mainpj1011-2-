@@ -45,7 +45,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
@@ -156,7 +156,7 @@ public:
 	class AWeapon* WeaponSlot1; //1번무기
 	class AWeapon* WeaponSlot2; //2번무기
 	class AWeapon* WeaponSlot3; //3번무기
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	class AWeapon* CurWeapon = nullptr;  // 현재무기
 	
 	//연사유무
