@@ -49,7 +49,7 @@ bool operator==(const FArmorPropertyStruct & Property1, const FArmorPropertyStru
 			}
 		}
 	}
-	else if (&Property1 == &Property1)
+	else if (&Property1 == &Property2)
 	{
 		return true;
 	}

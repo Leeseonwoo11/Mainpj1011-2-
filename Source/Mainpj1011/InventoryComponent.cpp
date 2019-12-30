@@ -36,6 +36,14 @@ bool UInventoryComponent::AddInventroyArmor(FArmorPropertyStruct Armor)
 {
 	if (ArmorInventory.Num() <= ArmorInventorySize)
 	{
+		for (auto tempArmor : ArmorInventory)
+		{
+			if (tempArmor == Armor)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Same item is in Inventory"));
+				return true;
+			}
+		}
 		ArmorInventory.Add(Armor);
 		return true;
 	}
@@ -62,6 +70,14 @@ bool UInventoryComponent::AddInventroyWeapon(FWeaponPropertyStruct Weapon)
 {
 	if (WeaponInventory.Num() <= WeaponInventorySize)
 	{
+		for (auto tempWeapon : WeaponInventory)
+		{
+			if (tempWeapon == Weapon)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Same item is in Inventory"));
+				return true;
+			}
+		}
 		WeaponInventory.Add(Weapon);
 		return true;
 	}

@@ -40,7 +40,7 @@ bool operator==(const FWeaponPropertyStruct& Property1, const FWeaponPropertyStr
 			}
 		}
 	}
-	else if (&Property1 == &Property1)
+	else if (&Property1 == &Property2)
 	{
 		return true;
 	}
