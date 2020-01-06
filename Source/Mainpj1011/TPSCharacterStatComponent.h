@@ -27,17 +27,29 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	float PlayerHealth = PlayerMaxHealth;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerMaxHealth = 100.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerHealth = PlayerMaxHealth;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerAttackPower = 0.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float PlayerSkillPower = 0.0f;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerWindChillMin = -43.0f;   // 최저체감온도 (생존모드에서 사용 도달하면 죽음)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerWindChillMax = 20.0f;   // 최고체감온도 (생존모드에서 사용)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float PlayerWindChill = 0.0f;   // 현재체감온도 (생존모드에서 사용)
+	float ColdDamage = 1.0f;
+	float WarmProperty = 1.0f;
 	UFUNCTION()
 	void SetDamage(float Damage);
+	UFUNCTION()
+	void SetColdDamage();
+	UFUNCTION()
+	void SetWarm();
 	UFUNCTION(BlueprintCallable)
 	float GetHPRatio();
 

@@ -103,5 +103,10 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UClass* Widget;
 
+	UFUNCTION()
+		void SpawnWeapon();
+	UFUNCTION()
+		void SpawnArmor();
 
+	bool bItemSpawn = true;
 };

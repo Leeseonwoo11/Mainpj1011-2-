@@ -536,6 +536,7 @@ void ATPSCharacter::preReload() // 무기의 종류에 따라서 탄약의 최대 수와 탄창용�
 			break;
 
 		case EWeaponType::AR:
+			GetWorldTimerManager().ClearTimer(FireSpeedTimer);
 			Reload(EWeaponType::AR);
 			break;
 

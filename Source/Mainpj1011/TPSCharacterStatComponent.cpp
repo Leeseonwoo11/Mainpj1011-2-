@@ -42,6 +42,29 @@ void UTPSCharacterStatComponent::SetDamage(float Damage)
 	}
 }
 
+void UTPSCharacterStatComponent::SetColdDamage()
+{
+	if (PlayerWindChillMin <= 0.0f)
+	{
+		if (PlayerWindChill > PlayerWindChillMin)
+		{
+			PlayerWindChill -= ColdDamage;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE"));
+		}
+	}
+}
+
+void UTPSCharacterStatComponent::SetWarm()
+{
+	if (PlayerWindChill < PlayerWindChillMax)
+	{
+		PlayerWindChill += WarmProperty;
+	}
+}
+
 float UTPSCharacterStatComponent::GetHPRatio()
 {
 	return PlayerHealth / PlayerMaxHealth;
@@ -55,6 +78,7 @@ void UTPSCharacterStatComponent::SetEquipmentAbility()
 		PlayerAttackPower = EquipComp->EquipHead.WeaponPower+ EquipComp->EquipChest.WeaponPower+ EquipComp->EquipFoots.WeaponPower+ EquipComp->EquipHands.WeaponPower+ EquipComp->EquipLegs.WeaponPower+ EquipComp->EquipShoulders.WeaponPower;
 		PlayerSkillPower = EquipComp->EquipHead.SkillPower + EquipComp->EquipChest.SkillPower + EquipComp->EquipFoots.SkillPower + EquipComp->EquipHands.SkillPower + EquipComp->EquipLegs.SkillPower + EquipComp->EquipShoulders.SkillPower;
 		PlayerMaxHealth = EquipComp->EquipHead.Health + EquipComp->EquipChest.Health + EquipComp->EquipFoots.Health + EquipComp->EquipHands.Health + EquipComp->EquipLegs.Health + EquipComp->EquipShoulders.Health+ 100; // 100은 기본값
+		PlayerWindChillMin = -43 + EquipComp->EquipHead.KeepWarm + EquipComp->EquipChest.KeepWarm + EquipComp->EquipFoots.KeepWarm + EquipComp->EquipHands.KeepWarm + EquipComp->EquipLegs.KeepWarm + EquipComp->EquipShoulders.KeepWarm;
 	}
 }
 

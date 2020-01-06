@@ -9,6 +9,11 @@
 #include "EnemyHPBarWidget.h"
 #include "AIModule/Classes/BrainComponent.h"
 #include "Skill_TrackingMine.h"
+#include "SpawningArmor.h"
+#include "SpawningWeapon.h"
+#include "TPSGameInstance.h"
+
+
 // Sets default values
 ATPSEnemy::ATPSEnemy()
 {
@@ -233,6 +238,24 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 
 	if (StatComp->Health <= 0 && bIsDead==false) //적 캐릭터 사망유무체크
 	{
+		if (bItemSpawn)
+		{
+			UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+			int32 RandomNum = GameInstance->RandonNumberRet(0, 9);
+			if (GameInstance != nullptr)
+			{
+				if (RandomNum > 4)
+				{
+					bItemSpawn = false;
+					SpawnArmor();
+				}
+				else
+				{
+					bItemSpawn = false;
+					SpawnWeapon();
+				}
+			}
+		}
 		GetMesh()->SetSimulatePhysics(true);
 		ATPSAIController* TPSAIController = Cast<ATPSAIController>(GetController());
 		if (TPSAIController != nullptr)
@@ -249,6 +272,22 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 			bIsDead = true;
 		}
 	}
+}
+
+void ATPSEnemy::SpawnWeapon()
+{
+	FVector RootingLoc = GetActorLocation();
+	RootingLoc.Z = 40.0f;
+	auto SpawnWeapon = GetWorld()->SpawnActor<ASpawningWeapon>(RootingLoc, GetActorRotation());
+	UE_LOG(LogTexture, Error, TEXT("SpawnWeapon"));
+}
+
+void ATPSEnemy::SpawnArmor()
+{
+	FVector RootingLoc = GetActorLocation();
+	RootingLoc.Z = 40.0f;
+	auto SpawnArmor = GetWorld()->SpawnActor<ASpawningArmor>(RootingLoc, GetActorRotation());
+	UE_LOG(LogTexture, Error, TEXT("SpawnArmor"));
 }
 
 

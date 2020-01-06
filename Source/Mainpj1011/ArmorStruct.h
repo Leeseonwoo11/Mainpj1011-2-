@@ -76,6 +76,8 @@ public:
 	EArmorRank Rank = EArmorRank::None;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EBrand Brand = EBrand::None;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float KeepWarm = 0.0f;
 };
 
 bool operator==(const FArmorPropertyStruct& Property1, const FArmorPropertyStruct& Property2);

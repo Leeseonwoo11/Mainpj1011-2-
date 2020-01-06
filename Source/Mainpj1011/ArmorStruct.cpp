@@ -41,7 +41,10 @@ bool operator==(const FArmorPropertyStruct & Property1, const FArmorPropertyStru
 						{
 							if ((Property1.Health - Property2.Health) < 0.01f && (Property1.Health - Property2.Health) > -0.01f)
 							{
-								return true;
+								if ((Property1.KeepWarm - Property2.KeepWarm) < 0.01f && (Property1.KeepWarm - Property2.KeepWarm) > -0.01f)
+								{
+									return true;
+								}
 							}
 						}
 					}

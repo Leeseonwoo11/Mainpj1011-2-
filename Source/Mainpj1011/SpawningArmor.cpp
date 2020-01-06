@@ -142,6 +142,7 @@ void ASpawningArmor::RankParticleSet()
 		ArmorProperty.WeaponPower *= 1.0;
 		ArmorProperty.SkillPower *= 1.0;
 		ArmorProperty.Health *= 1.0;
+		ArmorProperty.KeepWarm = 1.0f;//보온효과 +1
 		break;
 	case 1:
 		CurrentEffect = UnCommonEffect;
@@ -149,13 +150,16 @@ void ASpawningArmor::RankParticleSet()
 		ArmorProperty.WeaponPower *= 2.0;
 		ArmorProperty.SkillPower *= 2.0;
 		ArmorProperty.Health *= 2.0;
+		ArmorProperty.KeepWarm = 3.0f;//보온효과 +3
 		break;
 	case 2:
 		CurrentEffect = RareEffect;
 		ArmorProperty.Rank = EArmorRank::Rare;
 		ArmorProperty.WeaponPower *= 3.0;
 		ArmorProperty.SkillPower *= 3.0;
-		ArmorProperty.Health *= 3.0;
+		ArmorProperty.Health *= 4.0;
+		ArmorProperty.KeepWarm = 5.0f;//보온효과 +5
+
 		break;
 	case 3:
 		CurrentEffect = EpicEffect;
@@ -163,6 +167,8 @@ void ASpawningArmor::RankParticleSet()
 		ArmorProperty.WeaponPower *= 4.0;
 		ArmorProperty.SkillPower *= 4.0;
 		ArmorProperty.Health *= 4.0;
+		ArmorProperty.KeepWarm = 7.0f;//보온효과 +7
+
 		break;
 	case 4:
 		CurrentEffect = LegendaryEffect;
@@ -170,6 +176,7 @@ void ASpawningArmor::RankParticleSet()
 		ArmorProperty.WeaponPower *= 5.0;
 		ArmorProperty.SkillPower *= 5.0;
 		ArmorProperty.Health *= 5.0;
+		ArmorProperty.KeepWarm = 9.0f; //보온효과 +9
 		break;
 	default:
 		break;
