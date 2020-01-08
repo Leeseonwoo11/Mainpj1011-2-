@@ -18,8 +18,9 @@ class MAINPJ1011_API ATPSAIController : public AAIController
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UAISenseConfig_Sight* SightDefaultConfig;
+
 protected:
 	UFUNCTION()
 	void PerceptionUpdate(const TArray<AActor*>& UpdatedActors);
@@ -45,7 +46,7 @@ public:
 
 	ATPSEnemy* ControllingEnemy;
 
-private:
+public:
 	UPROPERTY()
 		class UBehaviorTree* BTAsset;
 	UPROPERTY()

@@ -85,7 +85,7 @@ public:
 	int32 count = 0;
 	//플레이어 포인터
 	ATPSCharacter* TempCharacter;
-
+	//행동변화 불값 변경 함수 (애니메이션에서 사용)
 	UFUNCTION(BlueprintCallable)
 	void CStartShooting();
 	UFUNCTION(BlueprintCallable)
@@ -94,6 +94,7 @@ public:
 	void CEnterCover();
 	UFUNCTION(BlueprintCallable)
 	void COutCover();
+	//겹침 체크 함수 총알,스킬 피격시 사용
 	UFUNCTION()
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -102,11 +103,11 @@ public:
 	UWidgetComponent* EnemyHPWidget;
 	UPROPERTY(VisibleAnywhere)
 	UClass* Widget;
-
+	//무기와 방어구 드랍 함수
 	UFUNCTION()
-		void SpawnWeapon();
+	void SpawnWeapon();
 	UFUNCTION()
-		void SpawnArmor();
+	void SpawnArmor();
 
 	bool bItemSpawn = true;
 };

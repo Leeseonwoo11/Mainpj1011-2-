@@ -196,7 +196,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipmentComponent* EquipmentComponent;
 
-	//스킬 시전 
+	//스킬 시전, 스킬 설정, 스킬 쿨타임함수
 	FInputActionBinding Skill_Q_Binding = FInputActionBinding("Skill_Q",IE_Pressed);
 	FInputActionBinding Skill_E_Binding = FInputActionBinding("Skill_E", IE_Pressed);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

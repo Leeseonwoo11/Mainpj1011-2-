@@ -18,19 +18,17 @@ ATPSAIController::ATPSAIController()
 {
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ATPSAIController::PerceptionUpdate);
-
 	SightDefaultConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	SightDefaultConfig->DetectionByAffiliation.bDetectEnemies = true;
 	SightDefaultConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	SightDefaultConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	PerceptionComponent->ConfigureSense(*SightDefaultConfig);
-
 	static ConstructorHelpers::FObjectFinder<UBlackboardData>BB_Object(TEXT("/Game/MyNew/AI/BB_Enemy"));
 	if (BB_Object.Succeeded())
 	{
 		BBAsset = BB_Object.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>BT_Object(TEXT("/Game/MyNew/AI/BT_EnemyCover"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>BT_Object(TEXT("/Game/MyNew/AI/BT_EnemyCover1"));
 	if (BT_Object.Succeeded())
 	{
 		BTAsset = BT_Object.Object;

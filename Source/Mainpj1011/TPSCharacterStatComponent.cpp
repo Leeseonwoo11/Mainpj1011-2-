@@ -11,6 +11,7 @@ UTPSCharacterStatComponent::UTPSCharacterStatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	
 	// ...
 }
 
@@ -28,6 +29,27 @@ void UTPSCharacterStatComponent::TickComponent(float DeltaTime, ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	// ...
+
+}
+
+void UTPSCharacterStatComponent::CallCold()
+{
+	GetWorld()->GetTimerManager().SetTimer(ColdTimer, this, &UTPSCharacterStatComponent::SetColdDamage, 1.0f, true, 1.0f);
+}
+
+void UTPSCharacterStatComponent::CallWarm()
+{
+	GetWorld()->GetTimerManager().SetTimer(WarmTimer, this, &UTPSCharacterStatComponent::SetWarm, 1.0f, true, 1.0f);
+}
+
+void UTPSCharacterStatComponent::ClearCold()
+{
+	GetWorld()->GetTimerManager().ClearTimer(ColdTimer);
+}
+
+void UTPSCharacterStatComponent::ClearWarm()
+{
+	GetWorld()->GetTimerManager().ClearTimer(WarmTimer);
 
 }
 
@@ -49,10 +71,14 @@ void UTPSCharacterStatComponent::SetColdDamage()
 		if (PlayerWindChill > PlayerWindChillMin)
 		{
 			PlayerWindChill -= ColdDamage;
+			if (PlayerWindChill < -20)
+			{
+				PlayerHealth -= 5.0f;
+			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE"));
+			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE DIED"));
 		}
 	}
 }

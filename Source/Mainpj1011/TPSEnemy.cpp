@@ -12,6 +12,8 @@
 #include "SpawningArmor.h"
 #include "SpawningWeapon.h"
 #include "TPSGameInstance.h"
+#include "Perception/AISenseConfig_Sight.h"
+
 
 
 // Sets default values
@@ -47,6 +49,11 @@ ATPSEnemy::ATPSEnemy()
 	if (UW_HPBar.Succeeded())
 	{
 		Widget = UW_HPBar.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterial>M_BODY(TEXT("/Game/MyNew/Material/M_EnemyBody"));
+	if(M_BODY.Succeeded())
+	{ 
+		GetMesh()->SetMaterial(0, M_BODY.Object);
 	}
 }
 
@@ -277,7 +284,7 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 void ATPSEnemy::SpawnWeapon()
 {
 	FVector RootingLoc = GetActorLocation();
-	RootingLoc.Z = 40.0f;
+	RootingLoc.Z -=88.0f ;
 	auto SpawnWeapon = GetWorld()->SpawnActor<ASpawningWeapon>(RootingLoc, GetActorRotation());
 	UE_LOG(LogTexture, Error, TEXT("SpawnWeapon"));
 }
@@ -285,7 +292,7 @@ void ATPSEnemy::SpawnWeapon()
 void ATPSEnemy::SpawnArmor()
 {
 	FVector RootingLoc = GetActorLocation();
-	RootingLoc.Z = 40.0f;
+	RootingLoc.Z -= 88.0f;
 	auto SpawnArmor = GetWorld()->SpawnActor<ASpawningArmor>(RootingLoc, GetActorRotation());
 	UE_LOG(LogTexture, Error, TEXT("SpawnArmor"));
 }
