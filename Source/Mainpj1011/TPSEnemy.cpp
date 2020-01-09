@@ -13,6 +13,7 @@
 #include "SpawningWeapon.h"
 #include "TPSGameInstance.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "TPSSoundComponent.h"
 
 
 
@@ -55,6 +56,11 @@ ATPSEnemy::ATPSEnemy()
 	{ 
 		GetMesh()->SetMaterial(0, M_BODY.Object);
 	}
+
+	SoundComp = CreateDefaultSubobject<UTPSSoundComponent>(TEXT("SoundComponent"));
+	SoundComp->ARShotSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->HitSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->StepSound->SetupAttachment(GetCapsuleComponent());
 }
 
 // Called when the game starts or when spawned
@@ -141,6 +147,9 @@ void ATPSEnemy::Fire()
 		auto TempBullet = BulletPool->GetBulletPtr();
 		if (TempBullet != nullptr)
 		{
+			//발사사운드 실행
+			SoundComp->ARShotSound->Play();
+			//적 발견시 발사
 			if (!Cast<ATPSAIController>(GetController())->CanSeePlayerAI)
 			{
 				FRotator BulletRot = GetActorRotation();
@@ -154,6 +163,7 @@ void ATPSEnemy::Fire()
 				TempBullet->SetActive(true);
 				TempBullet->BulletTrail->Activate(true);
 			}
+			//적 발견은 못햇지만 적방향으로 발사.(위협사격)
 			else
 			{
 				FRotator BulletRot = GetActorRotation();
@@ -220,6 +230,9 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 {
 	if (OtherComp->ComponentHasTag(FName("BULLET")))
 	{
+		//총알 피격시 소리
+		SoundComp->HitSound->Play();
+		//총알 피격시 데미지입기.
 		StatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
 		ATPSAIController* AIController = Cast<ATPSAIController>(GetController());
 		if (AIController != nullptr)
@@ -297,6 +310,10 @@ void ATPSEnemy::SpawnArmor()
 	UE_LOG(LogTexture, Error, TEXT("SpawnArmor"));
 }
 
+void ATPSEnemy::PlayStepSound()
+{
+	SoundComp->StepSound->Play();
+}
 
 
 

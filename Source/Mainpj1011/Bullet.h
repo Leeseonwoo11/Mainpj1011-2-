@@ -50,4 +50,5 @@ public:
 	FTimerHandle DestoryTime;
 	void SetDeActive();
 
+	class UTPSSoundComponent* BulletImpactSoundComp;
 };

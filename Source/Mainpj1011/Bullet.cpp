@@ -2,6 +2,8 @@
 
 
 #include "Bullet.h"
+#include "TPSSoundComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 ABullet::ABullet()
@@ -40,6 +42,8 @@ ABullet::ABullet()
 	ProjectileMovement->MaxSpeed = 5000.0f;
 	ProjectileMovement->Velocity = FVector(0, 0, 0);
 
+	BulletImpactSoundComp = CreateDefaultSubobject<UTPSSoundComponent>(TEXT("BulletImpactSound"));
+	BulletImpactSoundComp->WallHitSound->SetupAttachment(BulletBody);
 }
 
 // Called when the game starts or when spawned
@@ -86,7 +90,12 @@ void ABullet::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* O
 			BulletSpark->Activate(true);
 		}
 		GetWorldTimerManager().SetTimer(DestoryTime, this, &ABullet::SetDeActive,0.01, false);
+		if (OtherComp->ComponentHasTag(FName("Wall"))) //벽에 총알이 맞으면 총알 튕기는소리? 를 플레이한다.
+		{
+			BulletImpactSoundComp->WallHitSound->Play();
+		}
 	}
+
 }
 
 void ABullet::SetDeActive()

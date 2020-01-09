@@ -178,7 +178,6 @@ public:
 			int32 & NumberOfLoSChecksPerformed,
 			float & OutSightStrength,
 			const AActor * IgnoreActor = nullptr)const;
-	//델리게이트
 	
 	//인벤토리컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -242,6 +241,21 @@ public:
 	void MineCooltimeFunc();
 	UFUNCTION()
 	void SupportCooltimeFunc();
+	
+	//사운드
+	UPROPERTY()
+	class UTPSSoundComponent* SoundComp;
+
+	UFUNCTION(BlueprintCallable)
+	void StartReloadSound(); //에님노티파이로 실행해준다
+	UFUNCTION(BlueprintCallable)
+	void EndRelaodSound();//에님노티파이로 실행해준다
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeaponSound();//에님노티파이로 실행해준다
+	UFUNCTION(BlueprintCallable)
+	void PlayStepSound();//에님노티파이로 실행해준다
+
+	
 };
 
 

@@ -110,4 +110,8 @@ public:
 	void SpawnArmor();
 
 	bool bItemSpawn = true;
+	//»ç¿îµå
+	class UTPSSoundComponent* SoundComp;
+	UFUNCTION(BlueprintCallable)
+	void PlayStepSound();
 };

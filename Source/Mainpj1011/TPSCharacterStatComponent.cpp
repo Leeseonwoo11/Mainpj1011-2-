@@ -73,7 +73,10 @@ void UTPSCharacterStatComponent::SetColdDamage()
 			PlayerWindChill -= ColdDamage;
 			if (PlayerWindChill < -20)
 			{
-				PlayerHealth -= 5.0f;
+				if (PlayerHealth > 0)
+				{
+					PlayerHealth -= 5.0f;
+				}
 			}
 		}
 		else

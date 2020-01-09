@@ -19,6 +19,7 @@
 #include "Skill_Support.h"
 #include "Skill_TrackingMine.h"
 #include "AIController.h"
+#include "TPSSoundComponent.h"
 
 
 // Sets default values
@@ -57,6 +58,20 @@ ATPSCharacter::ATPSCharacter()
 	PlayerStatComp = CreateDefaultSubobject<UTPSCharacterStatComponent>(TEXT("PlayerStatComp"));
 	Inven = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("Equipment"));
+
+	SoundComp = CreateDefaultSubobject<UTPSSoundComponent>("SoundComponent");
+	SoundComp->HitSound->SetupAttachment(GetCapsuleComponent()); //사운드가 플레이어로부터 나올수 있도록 플레이어에 붙여준다.
+	SoundComp->WeaponChangeSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->StepSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->PTShotSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->PTReloadSound1->SetupAttachment(GetCapsuleComponent());
+	SoundComp->PTReloadSound2->SetupAttachment(GetCapsuleComponent());
+	SoundComp->ARShotSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->ARReloadSound1->SetupAttachment(GetCapsuleComponent());
+	SoundComp->ARReloadSound2->SetupAttachment(GetCapsuleComponent());
+	SoundComp->SRShotSound->SetupAttachment(GetCapsuleComponent());
+	SoundComp->SRReloadSound1->SetupAttachment(GetCapsuleComponent());
+	SoundComp->SRReloadSound2->SetupAttachment(GetCapsuleComponent());
 }
 
 // Called when the game starts or when spawned
@@ -337,6 +352,8 @@ void ATPSCharacter::preFire() //발사전에 준비
 
 void ATPSCharacter::Fire()
 {
+
+
 	//---------------------------발사 로케이션을 찾는 라인트레이싱
 	FHitResult OutResult;
 	FVector Start = Camera->GetComponentLocation();
@@ -378,6 +395,20 @@ void ATPSCharacter::Fire()
 			DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
 			CurWeapon->AMMO -= 1; // 발사할때마다 현재 총의 총알을 1빼준다.
 			UE_LOG(LogTemp, Error, TEXT("Remain Ammo  = %d"), CurWeapon->AMMO);
+
+			//발사 소리
+			if (CurWeapon->WeaponType == EWeaponType::AR)
+			{
+				SoundComp->ARShotSound->Play();
+			}
+			else if (CurWeapon->WeaponType == EWeaponType::SR)
+			{
+				SoundComp->SRShotSound->Play();
+			}
+			else if (CurWeapon->WeaponType == EWeaponType::PT)
+			{
+				SoundComp->PTShotSound->Play();
+			}
 		}
 	}
 }
@@ -663,6 +694,7 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 	if (OtherComp->ComponentHasTag(FName("BULLET")))
 	{
 		PlayerStatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
+		SoundComp->HitSound->Play();
 	}
 }
 
@@ -888,6 +920,48 @@ void ATPSCharacter::SupportCooltimeFunc()
 		bSupportCooldown = true;
 		GetWorldTimerManager().ClearTimer(SupportTimer);
 	}
+}
+
+void ATPSCharacter::StartReloadSound()
+{
+	if (CurWeapon->WeaponType == EWeaponType::PT)
+	{
+		SoundComp->PTReloadSound1->Play();
+	}
+	else if (CurWeapon->WeaponType == EWeaponType::AR)
+	{
+		SoundComp->ARReloadSound1->Play();
+	}
+	else if (CurWeapon->WeaponType == EWeaponType::SR)
+	{
+		SoundComp->SRReloadSound1->Play();
+	}
+}
+
+void ATPSCharacter::EndRelaodSound()
+{
+	if (CurWeapon->WeaponType == EWeaponType::PT)
+	{
+		SoundComp->PTReloadSound2->Play();
+	}
+	else if (CurWeapon->WeaponType == EWeaponType::AR)
+	{
+		SoundComp->ARReloadSound2->Play();
+	}
+	else if (CurWeapon->WeaponType == EWeaponType::SR)
+	{
+		SoundComp->SRReloadSound2->Play();
+	}
+}
+
+void ATPSCharacter::ChangeWeaponSound()
+{
+	SoundComp->WeaponChangeSound->Play();
+}
+
+void ATPSCharacter::PlayStepSound()
+{
+	SoundComp->StepSound->Play();
 }
 
 
