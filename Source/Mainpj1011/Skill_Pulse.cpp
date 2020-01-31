@@ -4,6 +4,8 @@
 #include "Skill_Pulse.h"
 #include "TPSEnemy.h"
 #include "DrawDebugHelpers.h"
+#include "TPSSoundComponent.h"
+
 
 ASkill_Pulse::ASkill_Pulse()
 {
@@ -26,6 +28,9 @@ ASkill_Pulse::ASkill_Pulse()
 	Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SkillRange->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	SkillRange->SetCollisionProfileName(FName("Pulse"));
+
+	SoundComp = CreateDefaultSubobject<UTPSSoundComponent>(TEXT("SoundComp"));
+	SoundComp->PulseDetectorSound->SetupAttachment(GetCapsuleComponent());
 }
 
 void ASkill_Pulse::BeginPlay()
@@ -43,6 +48,7 @@ void ASkill_Pulse::Tick(float DeltaTime)
 void ASkill_Pulse::StartSearching()
 {
 	UE_LOG(LogTemp, Error, TEXT("Start Searching!!!!!!!!!!!!!"));
+	SoundComp->PulseDetectorSound->Play(); // 서칭을 시작할 때 펄스 사운드 플레이
 	TSubclassOf<ATPSEnemy>TPSEnemyPtr;
 	TPSEnemyPtr = ATPSEnemy::StaticClass();
 	TArray<AActor*>Enemys;

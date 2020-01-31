@@ -35,4 +35,7 @@ public:
 	UFUNCTION()
 	void HealCharacter();
 
+	UPROPERTY()
+	class UTPSSoundComponent* SoundComp;
+
 };

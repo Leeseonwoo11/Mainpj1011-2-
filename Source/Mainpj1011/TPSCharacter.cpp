@@ -448,6 +448,10 @@ void ATPSCharacter::DownKeyRelease()
 {
 	IsDown = false;
 }
+void ATPSCharacter::SetTrueDeadState()
+{
+	bDeadState = true;
+}
 //무기교체상태 설정
 void ATPSCharacter::SetTrueChangeWeaponState()
 {
@@ -695,6 +699,11 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 	{
 		PlayerStatComp->SetDamage((float)Cast<ABullet>(OtherComp->GetOwner())->Damage);
 		SoundComp->HitSound->Play();
+	}
+	if (PlayerStatComp->GetHPRatio() <= 0.0f)
+	{
+		GetMesh()->SetSimulatePhysics(true);
+		SetTrueDeadState();
 	}
 }
 

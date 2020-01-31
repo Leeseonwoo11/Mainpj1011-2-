@@ -82,6 +82,7 @@ void UTPSCharacterStatComponent::SetColdDamage()
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE DIED"));
+			TempTPSCharacter->SetTrueDeadState();
 		}
 	}
 }

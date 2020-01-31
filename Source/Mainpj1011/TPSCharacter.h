@@ -98,6 +98,12 @@ public:
 	void DownKeyRelease(); // 아래키 안눌렸다.
 	bool IsDown = false; 
 
+	//사망 에니메이션
+	UPROPERTY(BlueprintReadOnly)
+	bool bDeadState = false;
+	UFUNCTION()
+	void SetTrueDeadState();
+
 	//무기교체에니메이션
 	UPROPERTY(BlueprintReadOnly)
 	bool bChangeWeaponState = false;

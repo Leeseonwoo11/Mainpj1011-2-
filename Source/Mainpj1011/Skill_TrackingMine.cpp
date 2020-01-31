@@ -8,6 +8,8 @@
 #include "DrawDebugHelpers.h"
 #include "TPSCharacter.h"
 #include "TPSCharacterStatComponent.h"
+#include "TPSSoundComponent.h"
+
 
 ASkill_TrackingMine::ASkill_TrackingMine()
 {
@@ -59,6 +61,9 @@ ASkill_TrackingMine::ASkill_TrackingMine()
 		Plane->SetMaterial(0, M_PLANE.Object);
 	}
 	SkillType = ESkillType::TrackingMines;
+
+	SoundComp = CreateDefaultSubobject<UTPSSoundComponent>(TEXT("SoundComponent"));
+	SoundComp->TrakingMineSound->SetupAttachment(GetCapsuleComponent());
 }
 
 void ASkill_TrackingMine::BeginPlay()
@@ -114,6 +119,7 @@ void ASkill_TrackingMine::Tick(float DeltaTime)
 				UE_LOG(LogTexture, Error, TEXT(" doldollee Move "));
 				Plane->SetWorldScale3D(FVector(3.0f, 3.0f, 0.25f));
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleFX1, GetActorLocation());
+				SoundComp->TrakingMineSound->Play();// 폭발하면서 터지는 사운드 플레이
 				IsExplosion = true;
 				SkillRange->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
 			}

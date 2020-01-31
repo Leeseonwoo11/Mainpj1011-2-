@@ -4,6 +4,7 @@
 #include "Skill_Support.h"
 #include "TPSCharacter.h"
 #include "TPSCharacterStatComponent.h"
+#include "TPSSoundComponent.h"
 
 ASkill_Support::ASkill_Support()
 {
@@ -31,6 +32,9 @@ ASkill_Support::ASkill_Support()
 	Aura->SetupAttachment(GetCapsuleComponent());
 	Aura->SetWorldLocation(FVector(0.0f, 0.0f, -88.0f));
 	SkillRange->SetCollisionProfileName(TEXT("Pulse"));
+
+	SoundComp = CreateDefaultSubobject<UTPSSoundComponent>(TEXT("SoundComponent"));
+	SoundComp->SupportSound->SetupAttachment(GetCapsuleComponent());
 }
 
 void ASkill_Support::BeginPlay()
@@ -43,6 +47,8 @@ void ASkill_Support::BeginPlay()
 	SkillRange->SetWorldScale3D(SkillRangeVector*4.0f);
 	this->SetLifeSpan(10.0f);
 	Cooltime = 10.0f;
+	SoundComp->SupportSound->Play();
+
 }
 void ASkill_Support::Tick(float DeltaTime)
 {

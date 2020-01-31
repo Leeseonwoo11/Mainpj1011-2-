@@ -52,6 +52,11 @@ public:
 	UAudioComponent* PTReloadSound1;
 	UPROPERTY(VisibleAnywhere)
 	UAudioComponent* PTReloadSound2;
-
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent* TrakingMineSound;
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent* PulseDetectorSound;
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent* SupportSound;
 		
 };

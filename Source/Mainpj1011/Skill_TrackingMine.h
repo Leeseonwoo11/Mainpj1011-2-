@@ -28,6 +28,8 @@ public:
 	UStaticMeshComponent* Plane;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystem* ParticleFX1;
+	UPROPERTY(VisibleAnywhere)
+	class UTPSSoundComponent* SoundComp;
 
 	bool bDetectflag = false;
 	bool bPlayerfallow = true;

@@ -30,4 +30,7 @@ public:
 	FTimerHandle DebugSphereTimer;
 	float Radius = 100;
 	void DebugSphere();
+
+	UPROPERTY(VisibleAnywhere)
+	class UTPSSoundComponent* SoundComp;
 };

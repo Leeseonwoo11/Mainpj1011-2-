@@ -23,6 +23,9 @@ UTPSSoundComponent::UTPSSoundComponent()
 	PTShotSound = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioPTShot"));
 	PTReloadSound1 = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioPTRload1"));
 	PTReloadSound2 = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioPTRload2"));
+	TrakingMineSound = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioTrakingMine"));
+	PulseDetectorSound = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioPulse"));
+	SupportSound = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioSupport"));
 	
 	HitSound->bAutoActivate = false;
 	WallHitSound->bAutoActivate = false;
@@ -37,6 +40,9 @@ UTPSSoundComponent::UTPSSoundComponent()
 	PTShotSound->bAutoActivate = false;
 	PTReloadSound1->bAutoActivate = false;
 	PTReloadSound2->bAutoActivate = false;
+	TrakingMineSound->bAutoActivate = false;
+	PulseDetectorSound->bAutoActivate = false;
+	SupportSound->bAutoActivate = false;
 
 	// 총알 피격 소리
 	static ConstructorHelpers::FObjectFinder<USoundCue>SC_Hit(TEXT("/Game/MyNew/Sound/HitSound/SniperRifle_ImpactBody_Cue"));
@@ -111,7 +117,22 @@ UTPSSoundComponent::UTPSSoundComponent()
 	{
 		SRReloadSound2->SetSound(SC_SRReload2.Object);
 	}
-	
+	// 각각 스킬 소리
+	static ConstructorHelpers::FObjectFinder<USoundCue>SC_TrakingMine(TEXT("/Game/MyNew/Sound/SkillSound/TrakingMine_Explosion_Cue"));
+	if (SC_TrakingMine.Succeeded())
+	{
+		TrakingMineSound->SetSound(SC_TrakingMine.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<USoundCue>SC_PulseScan(TEXT("/Game/MyNew/Sound/SkillSound/PulseScanSound_Cue"));
+	if (SC_PulseScan.Succeeded())
+	{
+		PulseDetectorSound->SetSound(SC_PulseScan.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<USoundCue>SC_Support(TEXT("/Game/MyNew/Sound/SkillSound/Support_Cue.Support_Cue"));
+	if (SC_Support.Succeeded())
+	{
+		SupportSound->SetSound(SC_Support.Object);
+	}
 	// ...
 }
 
