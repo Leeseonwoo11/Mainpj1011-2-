@@ -77,12 +77,15 @@ void UTPSCharacterStatComponent::SetColdDamage()
 				{
 					PlayerHealth -= 5.0f;
 				}
+				else
+				{
+					TempTPSCharacter->SetTrueDeadState();
+				}
 			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE DIED"));
-			TempTPSCharacter->SetTrueDeadState();
 		}
 	}
 }
