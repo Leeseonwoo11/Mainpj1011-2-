@@ -20,6 +20,7 @@
 #include "Skill_TrackingMine.h"
 #include "AIController.h"
 #include "TPSSoundComponent.h"
+#include "TPSGameInstance.h"
 
 
 // Sets default values
@@ -41,7 +42,6 @@ ATPSCharacter::ATPSCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 	SetCameraOption();
-
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIMBP_BODY(TEXT("/Game/MyNew/Animation/CharacterAnim/CharacterAnimation"));
 	if (ANIMBP_BODY.Succeeded())
@@ -84,6 +84,9 @@ void ATPSCharacter::BeginPlay()
 	SetWeapon3();
 	SetFalseCoverState();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacter::OnComponentBeginOverlap);
+
+	//타임스코어 올려주기
+	GetWorldTimerManager().SetTimer(TimeScoreHandle, this, &ATPSCharacter::SetTimeScoreFunc, 1.0f, true);
 }
 
 // Called every frame
@@ -225,6 +228,8 @@ void ATPSCharacter::ChangeAimLocation()
 //발사상태 설정
 void ATPSCharacter::SetTrueFireState()
 {
+	if(CurWeapon!=nullptr)
+		DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Cyan, false, 20.0f);
 	if (CurWeapon != nullptr)
 	{
 		if (CurWeapon->AMMO <= 0)
@@ -352,8 +357,6 @@ void ATPSCharacter::preFire() //발사전에 준비
 
 void ATPSCharacter::Fire()
 {
-
-
 	//---------------------------발사 로케이션을 찾는 라인트레이싱
 	FHitResult OutResult;
 	FVector Start = Camera->GetComponentLocation();
@@ -388,11 +391,12 @@ void ATPSCharacter::Fire()
 			TempBullet->Damage = CurWeapon->Damage+ PlayerStatComp->PlayerAttackPower; //무기의 데미지 + 플레이어 공격파워
 			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 			TempBullet->SetActorRotation(BulletRot);
-			TempBullet->ProjectileMovement->Velocity = FireVector *30051200 ; //
+			TempBullet->ProjectileMovement->Velocity = FireVector *200000 ; //
 			TempBullet->SetActive(true);
 			TempBullet->BulletTrail->Activate(true);
 
-			DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
+			//DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Green, false, 1.0f);
+			DrawDebugSphere(GetWorld(), TargetLoc, 5.0f, 10, FColor::Blue,false,20.0f);
 			CurWeapon->AMMO -= 1; // 발사할때마다 현재 총의 총알을 1빼준다.
 			UE_LOG(LogTemp, Error, TEXT("Remain Ammo  = %d"), CurWeapon->AMMO);
 
@@ -411,6 +415,7 @@ void ATPSCharacter::Fire()
 			}
 		}
 	}
+
 }
 
 void ATPSCharacter::FireCheck()
@@ -451,6 +456,7 @@ void ATPSCharacter::DownKeyRelease()
 void ATPSCharacter::SetTrueDeadState()
 {
 	bDeadState = true;
+	GetWorldTimerManager().ClearTimer(TimeScoreHandle);
 }
 //무기교체상태 설정
 void ATPSCharacter::SetTrueChangeWeaponState()
@@ -644,6 +650,10 @@ void ATPSCharacter::SetFalseCoverState()
 	//SpringArm->SetRelativeLocation(FVector(0.0f, 45.0f, 85.0f));
 	GetCapsuleComponent()->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	GetMesh()->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	UE_LOG(LogTemp, Error, TEXT("ForwardVector = %f,%f,%f"), Camera->GetForwardVector().X, Camera->GetForwardVector().Y, Camera->GetForwardVector().Z);
+	UE_LOG(LogTemp, Error, TEXT("CameraLoc = %f,%f,%f"), Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+	UE_LOG(LogTemp, Error, TEXT("TargetLoc = %f,%f,%f"), TargetLoc.X, TargetLoc.Y, TargetLoc.Z);
+
 }
 
 void ATPSCharacter::SetTrueCoverState()
@@ -653,6 +663,10 @@ void ATPSCharacter::SetTrueCoverState()
 	//SpringArm->SetRelativeLocation(FVector(0.0f, 45.0f, 35.0f));
 	GetCapsuleComponent()->SetRelativeScale3D(FVector(1.0f, 1.0f, 0.65f));
 	GetMesh()->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.54f));
+	UE_LOG(LogTemp, Error, TEXT("ForwardVector = %f,%f,%f"), Camera->GetForwardVector().X, Camera->GetForwardVector().Y, Camera->GetForwardVector().Z);
+	UE_LOG(LogTemp, Error, TEXT("CameraLoc = %f,%f,%f"), Camera->GetComponentLocation().X, Camera->GetComponentLocation().Y, Camera->GetComponentLocation().Z);
+	UE_LOG(LogTemp, Error, TEXT("TargetLoc = %f,%f,%f"), TargetLoc.X, TargetLoc.Y, TargetLoc.Z);
+
 }
 
 void ATPSCharacter::CharacterSpeedOption()
@@ -739,6 +753,11 @@ void ATPSCharacter::AddInventory()
 			if (Inven->AddInventroyArmor(TempArmor->ArmorProperty))
 			{
 				TempArmor->IsEattenItem = true;
+				UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+				if (GameInstance != nullptr)
+				{
+					GameInstance->AddItemScore(5);
+				}
 			}
 		}
 		else
@@ -753,6 +772,11 @@ void ATPSCharacter::AddInventory()
 			if (Inven->AddInventroyWeapon(TempWeapon->WeaponProperty))
 			{
 				TempWeapon->IsEattenItem = true;
+				UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+				if (GameInstance != nullptr)
+				{
+					GameInstance->AddItemScore(5);
+				}
 			}
 		}
 		else
@@ -971,6 +995,15 @@ void ATPSCharacter::ChangeWeaponSound()
 void ATPSCharacter::PlayStepSound()
 {
 	SoundComp->StepSound->Play();
+}
+
+void ATPSCharacter::SetTimeScoreFunc()
+{
+	UTPSGameInstance* TPSGameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+	if (TPSGameInstance != nullptr)
+	{
+		TPSGameInstance->AddTimeScore(1);
+	}
 }
 
 

@@ -261,6 +261,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayStepSound();//에님노티파이로 실행해준다
 
+	//타이머 핸들 타임스코어 함수
+	FTimerHandle TimeScoreHandle;
+	void SetTimeScoreFunc();
+
 	
 };
 

@@ -275,6 +275,8 @@ void ATPSEnemy::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp, AA
 					SpawnWeapon();
 				}
 			}
+			// 킬스코어 증가
+			GameInstance->AddKillScore(10);
 		}
 		GetMesh()->SetSimulatePhysics(true);
 		ATPSAIController* TPSAIController = Cast<ATPSAIController>(GetController());

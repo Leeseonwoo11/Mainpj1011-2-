@@ -86,6 +86,12 @@ void UTPSCharacterStatComponent::SetColdDamage()
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE DIED"));
+			if (PlayerWindChillMin < -40)
+				PlayerHealth = 0;
+			else if (PlayerWindChillMin < -30)
+				PlayerHealth -= 20.0f;
+			else if (PlayerWindChillMin < -20)
+				PlayerHealth -= 15.0f;
 		}
 	}
 }
