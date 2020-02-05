@@ -265,7 +265,10 @@ public:
 	FTimerHandle TimeScoreHandle;
 	void SetTimeScoreFunc();
 
-	
+	//마우스 감도 설정 함수
+	UFUNCTION(BlueprintCallable)
+	void SetAimSensitivity(float val);
+
 };
 
 

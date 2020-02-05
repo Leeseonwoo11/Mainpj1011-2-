@@ -43,4 +43,10 @@ public:
 	void AddKillScore(int32 Score);
 	UFUNCTION()
 	void AddItemScore(int32 Score);
+
+	//마우스 감도변수
+	UPROPERTY(BlueprintReadWrite)
+	float AimSensitivity = 20.0f;
+	UPROPERTY(BlueprintReadWrite)
+	float NormalAimSensityvity = 200.0f;
 };

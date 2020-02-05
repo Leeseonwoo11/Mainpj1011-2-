@@ -21,6 +21,7 @@
 #include "AIController.h"
 #include "TPSSoundComponent.h"
 #include "TPSGameInstance.h"
+#include "GameFramework/PlayerInput.h"
 
 
 // Sets default values
@@ -81,12 +82,18 @@ void ATPSCharacter::BeginPlay()
 	Tags.Add(TEXT("PLAYER"));
 	GetMesh()->SetGenerateOverlapEvents(true);
 
-	SetWeapon3();
 	SetFalseCoverState();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacter::OnComponentBeginOverlap);
 
 	//타임스코어 올려주기
 	GetWorldTimerManager().SetTimer(TimeScoreHandle, this, &ATPSCharacter::SetTimeScoreFunc, 1.0f, true);
+
+	//시작할때 마우스 감도 기본설정
+	UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+	if (GameInstance != nullptr)
+	{
+		SetAimSensitivity(GameInstance->NormalAimSensityvity);
+	}
 }
 
 // Called every frame
@@ -201,11 +208,23 @@ void ATPSCharacter::SetTrueAimState()
 	bAimState = true;
 	bAimRight = true;
 	SpringArm->TargetArmLength = 100.0f;
+	//마우스 조준감도로 바꾸기
+	UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+	if (GameInstance != nullptr)
+	{
+		SetAimSensitivity(GameInstance->AimSensitivity);
+	}
 }
 void ATPSCharacter::SetFalseAimState()
 {
 	SetCameraOption();
 	bAimState = false;
+	//마우스 일반감도로 바꾸기
+	UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
+	if (GameInstance != nullptr)
+	{
+		SetAimSensitivity(GameInstance->NormalAimSensityvity);
+	}
 }
 void ATPSCharacter::ChangeAimLocation()
 {
@@ -228,8 +247,7 @@ void ATPSCharacter::ChangeAimLocation()
 //발사상태 설정
 void ATPSCharacter::SetTrueFireState()
 {
-	if(CurWeapon!=nullptr)
-		DrawDebugLine(GetWorld(), CurWeapon->FirePos->GetComponentLocation(), TargetLoc, FColor::Cyan, false, 20.0f);
+
 	if (CurWeapon != nullptr)
 	{
 		if (CurWeapon->AMMO <= 0)
@@ -391,7 +409,10 @@ void ATPSCharacter::Fire()
 			TempBullet->Damage = CurWeapon->Damage+ PlayerStatComp->PlayerAttackPower; //무기의 데미지 + 플레이어 공격파워
 			TempBullet->SetActorLocation(CurWeapon->FirePos->GetComponentLocation());
 			TempBullet->SetActorRotation(BulletRot);
-			TempBullet->ProjectileMovement->Velocity = FireVector *200000 ; //
+			if(CurWeapon->WeaponType == EWeaponType::SR)
+				TempBullet->ProjectileMovement->Velocity = FireVector *1600000 ; //스나이퍼 총알이 더 빠르다.
+			else
+				TempBullet->ProjectileMovement->Velocity = FireVector * 800000; // 그 외 일반 총알 속도
 			TempBullet->SetActive(true);
 			TempBullet->BulletTrail->Activate(true);
 
@@ -1004,6 +1025,14 @@ void ATPSCharacter::SetTimeScoreFunc()
 	{
 		TPSGameInstance->AddTimeScore(1);
 	}
+	
+
+}
+
+void ATPSCharacter::SetAimSensitivity(float val)
+{
+	UPlayerInput* PlayerInpt = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->PlayerInput;
+	PlayerInpt->SetMouseSensitivity(val*0.00025);
 }
 
 
