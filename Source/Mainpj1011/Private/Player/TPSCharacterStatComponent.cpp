@@ -71,28 +71,45 @@ void UTPSCharacterStatComponent::SetColdDamage()
 		if (PlayerWindChill > PlayerWindChillMin)
 		{
 			PlayerWindChill -= ColdDamage;
-			if (PlayerWindChill < -20)
+
+			if (PlayerWindChill < -30)
+			{
+				if (PlayerHealth > 0)
+				{
+					PlayerHealth -= 20.0f;
+				}
+			}
+			else if (PlayerWindChill < -20)
+			{
+				if (PlayerHealth > 0)
+				{
+					PlayerHealth -= 10.0f;
+				}
+			}
+			else if (PlayerWindChill < -10)
 			{
 				if (PlayerHealth > 0)
 				{
 					PlayerHealth -= 5.0f;
 				}
-				else
+			}
+			else if (PlayerWindChill < 0)
+			{
+				if (PlayerHealth > 0)
 				{
-					TempTPSCharacter->SetTrueDeadState();
+					PlayerHealth -= 1.0f;
 				}
 			}
 		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("PLAYER IS FREEZE DIED"));
-			if (PlayerWindChillMin < -40)
-				PlayerHealth = 0;
-			else if (PlayerWindChillMin < -30)
-				PlayerHealth -= 20.0f;
-			else if (PlayerWindChillMin < -20)
-				PlayerHealth -= 15.0f;
-		}
+	}
+	if (PlayerWindChill < -40)
+	{
+		PlayerHealth = 0.0f;
+	}
+	if (GetHPRatio() <= 0.0f)
+	{
+		TempTPSCharacter->SetTrueDeadState();
+		UE_LOG(LogTexture, Error, TEXT("ColdDead"));
 	}
 }
 

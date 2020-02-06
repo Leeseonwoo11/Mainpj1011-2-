@@ -264,6 +264,8 @@ public:
 	//타이머 핸들 타임스코어 함수
 	FTimerHandle TimeScoreHandle;
 	void SetTimeScoreFunc();
+	UFUNCTION(BlueprintCallable)
+	void SetScoreTimerOff();
 
 	//마우스 감도 설정 함수
 	UFUNCTION(BlueprintCallable)

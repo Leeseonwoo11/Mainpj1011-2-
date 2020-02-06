@@ -739,6 +739,7 @@ void ATPSCharacter::OnComponentBeginOverlap(UPrimitiveComponent * OverlappedComp
 	{
 		GetMesh()->SetSimulatePhysics(true);
 		SetTrueDeadState();
+		UE_LOG(LogTexture, Error, TEXT("BulletDead"));
 	}
 }
 
@@ -1027,6 +1028,11 @@ void ATPSCharacter::SetTimeScoreFunc()
 	}
 	
 
+}
+
+void ATPSCharacter::SetScoreTimerOff()
+{
+	GetWorldTimerManager().ClearTimer(TimeScoreHandle);
 }
 
 void ATPSCharacter::SetAimSensitivity(float val)
