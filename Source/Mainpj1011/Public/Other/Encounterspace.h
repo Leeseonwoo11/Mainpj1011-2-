@@ -7,6 +7,8 @@
 #include "TPSEnemy.h"
 #include "Encounterspace.generated.h"
 
+// 적 하나가 이 영역에서 플레이어를 감지하면 다른 적들도 플레이어를 감지할 수 있도록 설정해주는 영역 액터
+
 DECLARE_DELEGATE_OneParam(FEncounterDelegate,FVector)
 
 UCLASS()

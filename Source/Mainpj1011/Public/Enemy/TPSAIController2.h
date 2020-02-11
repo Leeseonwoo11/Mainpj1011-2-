@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+// TPSEnmey2를 움직이기 위한 AIController로 TPSAIcontroller를 상속받아 사용한다.
 UCLASS()
 class MAINPJ1011_API ATPSAIController2 : public ATPSAIController
 {

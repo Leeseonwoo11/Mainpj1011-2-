@@ -9,7 +9,7 @@
 #include "ArmorStruct.h"
 #include "WeaponStruct.h"
 
-void UItemInfomationWidget::BindArmor(ASpawningArmor* NewArmor)
+void UItemInfomationWidget::BindArmor(ASpawningArmor* NewArmor) //스폰방어구액터 포인터가 넘어옴
 {
 	if (NewArmor == nullptr)
 	{
@@ -18,10 +18,10 @@ void UItemInfomationWidget::BindArmor(ASpawningArmor* NewArmor)
 	}
 	UE_LOG(LogTemp, Error, TEXT("NewArmor is not nullptr"));
 	SpawningArmor = NewArmor;
-	UpdateArmorWidget();
+	UpdateArmorWidget(); 
 }
 
-void UItemInfomationWidget::BindWeapon(ASpawningWeapon * NewWeapon)
+void UItemInfomationWidget::BindWeapon(ASpawningWeapon * NewWeapon) // 스폰무기액터 포인터가 넘어옴
 {
 	if (NewWeapon == nullptr)
 	{
@@ -52,7 +52,7 @@ void UItemInfomationWidget::NativeConstruct()
 	}
 }
 
-void UItemInfomationWidget::UpdateArmorWidget()
+void UItemInfomationWidget::UpdateArmorWidget()// 방어구 위젯 업데이트(색깔을 바꿈)
 {
 	BrandName->SetText(FText::FromString(SpawningArmor->BrandName));
 	TypeName->SetText(FText::FromString(SpawningArmor->TypeName));
@@ -80,7 +80,7 @@ void UItemInfomationWidget::UpdateArmorWidget()
 	//-------------------------------------------------------------
 }
 
-void UItemInfomationWidget::UpadateWeaponWidget()
+void UItemInfomationWidget::UpadateWeaponWidget() // 무기 위젯 업데이트 (색깔을 바꿈)
 {
 	BrandName->SetText(FText::FromString(SpawningWeapon->FullName));
 	switch (SpawningWeapon->WeaponProperty.Rank)

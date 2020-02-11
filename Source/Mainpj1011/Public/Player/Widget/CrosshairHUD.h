@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+//조준선을 표시해주는 HUD
+
 UCLASS()
 class MAINPJ1011_API ACrosshairHUD : public AHUD
 {

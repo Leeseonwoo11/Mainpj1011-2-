@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "WeaponStruct.generated.h"
 
+// 무기의 이넘들 구조체가 있다.
+
 UENUM(BlueprintType)
 enum class EWeaponRank : uint8 // 아이템 등급
 {
@@ -64,6 +66,6 @@ public:
 	int32 AdditionalRPM = 0;
 };
 
-bool operator==(const FWeaponPropertyStruct& Property1, const FWeaponPropertyStruct& Property2);
+bool operator==(const FWeaponPropertyStruct& Property1, const FWeaponPropertyStruct& Property2); //비교연산자를 사용하기 위해서 오버로딩함
 
 

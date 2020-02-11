@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ArmorStruct.generated.h"
 
+// 방어구의 이넘들 구조체가 있다.
+
 UENUM(BlueprintType)
 enum class EArmorType : uint8 //아이템 타입
 {

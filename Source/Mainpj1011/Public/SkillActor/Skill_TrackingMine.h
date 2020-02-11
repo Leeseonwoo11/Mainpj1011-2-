@@ -10,6 +10,9 @@
 /**
  * 
  */
+
+//추적지뢰는 스폰이되고 주변에 적이 없다면 플레이어를 따라다니다가 적을 감지하면 적주변으로 이동하고 폭발한다.
+//스킬파워가 커지면 데미지가 증가한다.
 UCLASS()
 class MAINPJ1011_API ASkill_TrackingMine : public ASkillObject
 {

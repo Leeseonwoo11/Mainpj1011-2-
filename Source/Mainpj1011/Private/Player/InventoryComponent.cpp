@@ -94,7 +94,7 @@ void UInventoryComponent::RemoveInventoryWeapon(FWeaponPropertyStruct Weapon)
 	{
 		if (InvenItem == Weapon)
 		{
-			UE_LOG(LogTexture, Error, TEXT("Armor is Same"));
+			UE_LOG(LogTexture, Error, TEXT("Weapon is Same"));
 			WeaponInventory.RemoveSingle(Weapon);
 		}
 	}

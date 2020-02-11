@@ -4,9 +4,10 @@
 #include "BTTaskNode_CallOutTarget.h"
 #include "TPSAIController.h"
 #include "Encounterspace.h"
-
+//적 AI가 목표물(플레이어)을 찾았을때 EncounterSapce에 목표물의 위치를 전달하고 BT의 결과값을 Succeeded로 바꿔준다.
 UBTTaskNode_CallOutTarget::UBTTaskNode_CallOutTarget()
 {
+	NodeName = TEXT("CallOutTarget");
 }
 
 EBTNodeResult::Type UBTTaskNode_CallOutTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)

@@ -18,7 +18,7 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetScopeMode();
+	void SetScopeMode(); // 스코프모드
 	UFUNCTION(BlueprintCallable)
-	void SetAimMode();
+	void SetAimMode(); //  일반조준모드
 };

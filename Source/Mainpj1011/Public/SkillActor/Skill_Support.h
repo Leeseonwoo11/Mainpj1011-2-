@@ -9,6 +9,8 @@
 /**
  * 
  */
+// 서포터가 스폰이 되면 콜리젼에 감지된 플레이어는 콜리젼 내에서 타이머가 작동하는동안 HP를 회복시켜준다.
+// 스킬파워가 높다면 힐량이 증가한다.
 UCLASS()
 class MAINPJ1011_API ASkill_Support : public ASkillObject
 {

@@ -8,6 +8,8 @@
 #include "Components/WidgetComponent.h"
 #include "SpawningArmor.generated.h"
 
+//스폰되는 방어구의 액터이다. 
+
 UCLASS()
 class MAINPJ1011_API ASpawningArmor : public AActor
 {

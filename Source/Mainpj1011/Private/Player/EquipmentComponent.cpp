@@ -74,29 +74,29 @@ void UEquipmentComponent::MountingWeapon(FWeaponPropertyStruct NewWeapon)
 	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (TempCharacter != nullptr)
 	{
-		if (NewWeapon.WeaponType == EWeaponType::AR)
+		if (NewWeapon.WeaponType == EWeaponType::AR)// 돌격소총이라면
 		{
 			ARSlot = NewWeapon;
-			if (TempCharacter->WeaponSlot1 != nullptr)
+			if (TempCharacter->WeaponSlot1 != nullptr)// 캐릭터의 무기슬롯1에 무기가 있다면
 			{
-				TempCharacter->WeaponSlot1->Destroy();
+				TempCharacter->WeaponSlot1->Destroy(); // 무기슬롯 1의 무기를 없앤다.
 			}
-			auto AR = GetWorld()->SpawnActor<AWeapon_AR>(FVector::ZeroVector, FRotator::ZeroRotator);
-			AR->Damage += NewWeapon.AdditionalDamage;
-			AR->RPM += NewWeapon.AdditionalRPM;
-			TempCharacter->WeaponSlot1 = AR;
-			if (TempCharacter->CurrentWeaponSlot == EWeaponNum::Weapon1)
+			auto AR = GetWorld()->SpawnActor<AWeapon_AR>(FVector::ZeroVector, FRotator::ZeroRotator);// 돌격소총을 스폰한다.
+			AR->Damage += NewWeapon.AdditionalDamage;// 데미지 설정
+			AR->RPM += NewWeapon.AdditionalRPM; // 발사속도 설정
+			TempCharacter->WeaponSlot1 = AR; // 스폰한 무기를 지정해준다.
+			if (TempCharacter->CurrentWeaponSlot == EWeaponNum::Weapon1)// 현재무기슬롯이 1번슬롯이라면
 			{
-				AR->AttachToComponent(TempCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));
-				TempCharacter->CurWeapon = AR;
+				AR->AttachToComponent(TempCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_r_ARSocket"));// 스폰한 무기를 손 소캣에 장착시킨다.
+				TempCharacter->CurWeapon = AR; // 현재무기를 돌격소총으로 바꾼다.
 			}
-			else
+			else //무기슬롯이 1번이 아니라면
 			{
-				AR->AttachToComponent(TempCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket"));
+				AR->AttachToComponent(TempCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Weapon1_Socket")); // 돌격소총 수납소캣에 장착시킨다.
 			}
 		}
 
-		else if (NewWeapon.WeaponType == EWeaponType::SR)
+		else if (NewWeapon.WeaponType == EWeaponType::SR) // 스나이퍼라이플이라면
 		{
 			SRSlot = NewWeapon;
 			if (TempCharacter->WeaponSlot2 != nullptr)
@@ -118,7 +118,7 @@ void UEquipmentComponent::MountingWeapon(FWeaponPropertyStruct NewWeapon)
 			}
 		}
 
-		else if (NewWeapon.WeaponType == EWeaponType::PT)
+		else if (NewWeapon.WeaponType == EWeaponType::PT) // 피스톨이라면
 		{
 			PistolSlot = NewWeapon;
 			if (TempCharacter->WeaponSlot3 != nullptr)

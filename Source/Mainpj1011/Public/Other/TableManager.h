@@ -7,6 +7,8 @@
 /**
  * 
  */
+//테이블매니져로 무기테이블을 가지고 있다. 각 무기별 데미지 장탄수 RPM 등을 쉽게 불러올 수 있도록 싱글턴으로 만들었다.
+
 class MAINPJ1011_API TableManager
 {
 private:

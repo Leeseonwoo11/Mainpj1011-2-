@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+// 펄스스킬액터가 스폰이 모든 적들은 일시적으로 랜더 커스텀뎁스를 켜주어 벽 뒤에서도 감지할 수 있도록 바꿔준다.
+// 시간이 지나면 원래대로 돌아간다.
 UCLASS()
 class MAINPJ1011_API ASkill_Pulse : public ASkillObject
 {

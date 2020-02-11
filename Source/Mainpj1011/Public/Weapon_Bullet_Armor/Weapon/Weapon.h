@@ -7,7 +7,7 @@
 #include "WeaponStruct.h"
 #include "Weapon.generated.h"
 
-
+// 무기의 메시,총알수,파티클 등이 변수로 저장되어있다. 무기들은 이 액터를 상속받아서 사용한다.
 
 UCLASS()
 class MAINPJ1011_API AWeapon : public AActor

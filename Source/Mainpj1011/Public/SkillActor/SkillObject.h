@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SkillObject.generated.h"
 
+//스킬오브젝트 스킬액터들은 이 클래스를 상속받아 만들어짐
 
 UENUM()
 enum class ESkillType

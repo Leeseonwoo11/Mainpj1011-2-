@@ -23,12 +23,12 @@ ATPSAIController::ATPSAIController()
 	SightDefaultConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	SightDefaultConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	PerceptionComponent->ConfigureSense(*SightDefaultConfig);
-	static ConstructorHelpers::FObjectFinder<UBlackboardData>BB_Object(TEXT("/Game/MyNew/AI/BB_Enemy"));
+	static ConstructorHelpers::FObjectFinder<UBlackboardData>BB_Object(TEXT("/Game/MyNew/AI/BB_Enemy")); //블랙보드 지정
 	if (BB_Object.Succeeded())
 	{
 		BBAsset = BB_Object.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree>BT_Object(TEXT("/Game/MyNew/AI/BT_EnemyCover1"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree>BT_Object(TEXT("/Game/MyNew/AI/BT_EnemyCover1")); // 비헤이비어트리 지정
 	if (BT_Object.Succeeded())
 	{
 		BTAsset = BT_Object.Object;
@@ -52,7 +52,7 @@ UBlackboardComponent * ATPSAIController::GetBlackboard()
 	return Blackboard;
 }
 
-void ATPSAIController::PerceptionUpdate(const TArray<AActor*>& UpdatedActors)
+void ATPSAIController::PerceptionUpdate(const TArray<AActor*>& UpdatedActors) // 지각 없데이트 AI는 시각만 사용하므로 Switch에 case 가 한개뿐이다.
 {
 	for (AActor* TempActor : UpdatedActors)
 	{
@@ -85,13 +85,13 @@ void ATPSAIController::OnSightPerceptionUpdate(AActor * TempActor, FAIStimulus S
 
 	if (TempActor->ActorHasTag(TEXT("PLAYER")))
 	{
-		if (Stimulus.WasSuccessfullySensed())
+		if (Stimulus.WasSuccessfullySensed()) //감각이 살아있고 플레이어를 발견했다.
 		{
 			UE_LOG(LogType, Error, TEXT("Sense and AICon canseepalyer"));
 			Blackboard->SetValueAsBool(CanSeePlayer, true);
 			CanSeePlayerAI = true;
 		}
-		else
+		else //감각은 살아있지만 플레이어를 발견하지 못했다.
 		{
 			UE_LOG(LogType, Error, TEXT("Sense but AICon can not seepalyer"));
 
@@ -99,14 +99,15 @@ void ATPSAIController::OnSightPerceptionUpdate(AActor * TempActor, FAIStimulus S
 			Blackboard->SetValueAsBool(CanSeePlayer, false);
 		}
 	}
-	else
+	else //감각이 죽어있고 플레이어도 찾지못했다.
 	{
 		UE_LOG(LogType, Error, TEXT("No Sense AICon can not seepalyer"));
 
 		CanSeePlayerAI = false;
 		Blackboard->SetValueAsBool(CanSeePlayer, false);
 	}
-	if (Blackboard->GetValueAsBool(CanSeePlayer) && ControllingEnemy->bCrouchState)
+	
+	if (Blackboard->GetValueAsBool(CanSeePlayer) && ControllingEnemy->bCrouchState) // 블랙보드에서 플레이어를 찾았고 컨트롤하는 Enemy가 무릎쏴 상태라면 엄페 공격상태(IsInCover)로 바꿔준다.
 	{
 		Blackboard->SetValueAsBool(IsInCover, true);
 	}

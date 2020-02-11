@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FWeaponPropertyStruct WeaponProperty;
+	FWeaponPropertyStruct WeaponProperty; // 무기 구조체 이넘값들.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* InteractionBox;

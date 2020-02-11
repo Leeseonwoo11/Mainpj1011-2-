@@ -30,18 +30,18 @@ void UBulletPoolComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UBulletPoolComponent::GenerateBulletPool()
+void UBulletPoolComponent::GenerateBulletPool() 
 {
 	UWorld* const World = GetWorld();
 	if (World)
 	{
 		for (int32 i = 0; i < PoolSize; i++)
 		{
-			ABullet* TempBullet = GetWorld()->SpawnActor<ABullet>(FVector::ZeroVector, FRotator::ZeroRotator);
+			ABullet* TempBullet = GetWorld()->SpawnActor<ABullet>(FVector::ZeroVector, FRotator::ZeroRotator); // 총알 생성
 			if (TempBullet != nullptr)
 			{
-					TempBullet->SetActive(false);
-					Bulletpool.Push(TempBullet);
+					TempBullet->SetActive(false); // 총알 비활성화
+					Bulletpool.Push(TempBullet); // 풀 배열에 추가
 			}
 			
 		}
@@ -50,21 +50,21 @@ void UBulletPoolComponent::GenerateBulletPool()
 
 ABullet * UBulletPoolComponent::GetBulletPtr()
 {
-	for (ABullet* PoolingBullet : Bulletpool)
+	for (ABullet* PoolingBullet : Bulletpool) //풀 배열
 	{
-		if (!PoolingBullet->IsActive())
+		if (!PoolingBullet->IsActive())// 비활성화된 총알이라면
 		{
-			return PoolingBullet;
+			return PoolingBullet; // 리턴해준다.
 		}
 	}
-	return nullptr;
+	return nullptr;// 비활성화된 총알이 풀에 없다면 널값을 리턴해준다.
 }
 
-void UBulletPoolComponent::DestroyBulletPool()
+void UBulletPoolComponent::DestroyBulletPool()// 풀삭제
 {
 	for (ABullet* PoolingBullet : Bulletpool)
 	{
-		PoolingBullet->Destroy();
-		PoolingBullet = nullptr;
+		PoolingBullet->Destroy();// 생성해 놓은 총알 삭제
+		PoolingBullet = nullptr; // 널로 바꿔줌
 	}
 }

@@ -9,6 +9,7 @@
 /**
  * 
  */
+// 테이블매니져에서 무기의 속성들을 받아와서 설정한다.
 UCLASS()
 class MAINPJ1011_API AWeapon_AR : public AWeapon
 {

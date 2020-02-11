@@ -33,5 +33,5 @@ void UTPSEnemyStatComponent::SetDamage(float NewDamage)// 데미지를 입는 함수.
 }
 float UTPSEnemyStatComponent::GetHPRatio()
 {
-	return Health / 100.0f;
+	return Health / MaxHealth;
 }

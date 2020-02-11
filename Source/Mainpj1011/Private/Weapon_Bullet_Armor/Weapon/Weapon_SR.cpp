@@ -12,14 +12,14 @@ AWeapon_SR::AWeapon_SR()
 	{
 		WeaponBody->SetSkeletalMesh(SK_BODY.Object);
 	}
-	WeaponBody->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
-	WeaponType = EWeaponType::SR;
-	FirePos->SetRelativeLocation(FVector(0.0f, 80.0f, 14.0f));
-	FirePos->SetRelativeRotation(FRotator(0, 90, 0));
+	WeaponBody->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f)); 
+	WeaponType = EWeaponType::SR; //  무기타입설정
+	FirePos->SetRelativeLocation(FVector(0.0f, 80.0f, 14.0f));// 총알 발사 위치 재설정
+	FirePos->SetRelativeRotation(FRotator(0, 90, 0)); // 총알 발사 위치 회전값 재설정
 }
 void AWeapon_SR::BeginPlay()
 {
-	TableManager* TableMgr = TableManager::GetInstance();
+	TableManager* TableMgr = TableManager::GetInstance(); // 무기테이블에서 해당하는 값들 불러와 설정
 	Damage = TableMgr->GetWeaponDamage(WeaponType);
 	RPM = TableMgr->GetWeaponRPM(WeaponType);
 	AMMO = TableMgr->GetWeaponAMMO(WeaponType);
@@ -32,13 +32,13 @@ void AWeapon_SR::BeginPlay()
 
 }
 
-void AWeapon_SR::SetScopeMode()
+void AWeapon_SR::SetScopeMode()// 스나이퍼의 경우 스코프가 있어서 스코프 사격시 총알 발시위치는 총구에서 카메라위치로 수정된다.
 {
 	ATPSCharacter* TempCharacter = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FirePos->SetWorldLocation(TempCharacter->Camera->GetComponentLocation());
 }
 
-void AWeapon_SR::SetAimMode()
+void AWeapon_SR::SetAimMode() // 총알발사위치를 원래 총구위치로 바꿔준다.
 {
 	FirePos->SetRelativeLocation(FVector(0.0f, 80.0f, 14.0f));
 }

@@ -9,6 +9,7 @@
 /**
  * 
  */
+// TPSEnemey를 상속받으며 머터리얼과 AIController만 바꾼다.
 UCLASS()
 class MAINPJ1011_API ATPSEnemy2 : public ATPSEnemy
 {

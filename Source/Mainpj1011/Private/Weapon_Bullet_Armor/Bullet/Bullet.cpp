@@ -82,7 +82,7 @@ void ABullet::SetVelocity(FVector val)
 
 void ABullet::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!OtherComp->ComponentHasTag(FName("BULLET")))
+	if (!OtherComp->ComponentHasTag(FName("BULLET")))// 총알끼리 충돌은 무시한다.
 	{
 		this->SetVelocity(FVector(0.0f, 0.0f, 0.0f));
 		if (this->IsActive())

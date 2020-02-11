@@ -47,21 +47,21 @@ void ASpawningWeapon::PostInitializeComponents()
 	UTPSGameInstance* GameInstance = Cast<UTPSGameInstance>(GetGameInstance());
 	if (GameInstance != nullptr)
 	{
-		Ranknum = GameInstance->RandonNumberRet(0, 4);
-		Typenum = GameInstance->RandonNumberRet(0, 2);
+		Ranknum = GameInstance->RandonNumberRet(0, 4); // 랭크 0~4 랜덤한 수 설정
+		Typenum = GameInstance->RandonNumberRet(0, 2); // 부위 0~2 랜덤한 수 설정
 	}
-	TypeSet();
-	WeaponProperty.WeaponName = FName(*FullName);
-	RankParticleSet();
+	TypeSet(); //타입설정
+	WeaponProperty.WeaponName = FName(*FullName);// 이름설정
+	RankParticleSet();// 등급설정
 
-	UUserWidget* WeaponWidget = CreateWidget<UUserWidget>(GetWorld(), WeaponInfoWidget);
-	WidgetComponent->SetWidget(WeaponWidget);
-	WidgetComponent->SetDrawSize(FVector2D(300, 100));
-	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0, 0, 200.0f));
-	auto WeaponWidgetObj = Cast<UItemInfomationWidget>(WidgetComponent->GetUserWidgetObject());
+	UUserWidget* WeaponWidget = CreateWidget<UUserWidget>(GetWorld(), WeaponInfoWidget); // 위젯 생성
+	WidgetComponent->SetWidget(WeaponWidget); //  위젯컴포넌트에 설정
+	WidgetComponent->SetDrawSize(FVector2D(300, 100)); // 그리는 사이즈 설정
+	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0, 0, 200.0f)); // 위치 설정
+	auto WeaponWidgetObj = Cast<UItemInfomationWidget>(WidgetComponent->GetUserWidgetObject()); // 
 	if (WeaponWidgetObj != nullptr)
 	{
-		WeaponWidgetObj->BindWeapon(this);
+		WeaponWidgetObj->BindWeapon(this); // 아이템정보위젯에 스폰무기를 보내줘서 등급을 위젯의 색깔로 표시하기 위해서 묶어줌 
 	}
 
 }
@@ -76,20 +76,20 @@ void ASpawningWeapon::BeginPlay()
 	{
 		UE_LOG(LogTexture, Error, TEXT("TempCharacter is nullptr"));
 	}
-	WidgetComponent->SetVisibility(false);
-	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ASpawningWeapon::OnComponentBeginOverlap);
-	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ASpawningWeapon::OnOverlapEnd);
+	WidgetComponent->SetVisibility(false); // 위젯 보이기 false
+	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ASpawningWeapon::OnComponentBeginOverlap); //.상호작용박스 beginoverlap
+	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ASpawningWeapon::OnOverlapEnd); //  상호작용박스 endoverlap
 }
 
 // Called every frame
 void ASpawningWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FRotator WidgetRot = UKismetMathLibrary::FindLookAtRotation(WidgetComponent->GetComponentLocation(), TempCharacter->Camera->GetComponentLocation());
-	WidgetComponent->SetWorldRotation(WidgetRot);
-	if (IsEattenItem)
+	FRotator WidgetRot = UKismetMathLibrary::FindLookAtRotation(WidgetComponent->GetComponentLocation(), TempCharacter->Camera->GetComponentLocation()); //플레이어가 항상 볼 수 있도록 하는 위젯 회전값
+	WidgetComponent->SetWorldRotation(WidgetRot);// 회전시키기
+	if (IsEattenItem)// 먹은아이템은
 	{
-		Destroy();
+		Destroy();// 삭제함
 	}
 }
 

@@ -5,8 +5,8 @@
 #include "TPSAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "TPSCharacter.h"
-//#include "NavigationSystem.h"
 
+// AI가 플레이어 쪽으로 방향을 틀어 플레이어를 바라보도록 명령하는 BTTask
 UBTTask_Focus::UBTTask_Focus()
 {
 	NodeName = TEXT("Focus");
@@ -21,13 +21,6 @@ EBTNodeResult::Type UBTTask_Focus::ExecuteTask(UBehaviorTreeComponent & OwnerCom
 	{
 		return EBTNodeResult::Failed;
 	}
-	/*
-	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(ControllingPawn->GetWorld());
-	if (NavSystem == nullptr)
-	{
-		return EBTNodeResult::Failed;
-	}
-	*/
 	ATPSCharacter* Character = Cast<ATPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (Character == nullptr)
 	{

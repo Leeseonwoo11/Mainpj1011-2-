@@ -11,10 +11,10 @@ AWeapon_Pistol::AWeapon_Pistol()
 	{
 		WeaponBody->SetSkeletalMesh(SK_BODY.Object);
 	}
-	WeaponBody->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));
-	WeaponType = EWeaponType::PT;
-	FirePos->SetRelativeLocation(FVector(0.0f, 30.0f, 10.0f));
-	FirePos->SetRelativeRotation(FRotator(0, 90, 0));
+	WeaponBody->SetWorldScale3D(FVector(1.2f, 1.2f, 1.2f));// 무기가 작아서 잘보이게 스케일을 키워줌
+	WeaponType = EWeaponType::PT; //  무기의 타입 설정
+	FirePos->SetRelativeLocation(FVector(0.0f, 30.0f, 10.0f)); // 무기 발사위치 재설정 (총구)
+	FirePos->SetRelativeRotation(FRotator(0, 90, 0)); //  무기의 발사위치 회전값 재설정
 }
 
 void AWeapon_Pistol::BeginPlay()

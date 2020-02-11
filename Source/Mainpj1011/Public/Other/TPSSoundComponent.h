@@ -7,6 +7,7 @@
 #include "Sound/SoundCue.h"
 #include "TPSSoundComponent.generated.h"
 
+// 게임플레이 할 때 필요한 사운드를 모두 담아놓은 사운드 컴포넌트이다. 총소리 재장전소리 무기교체서리 발걸음소리 등등
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPJ1011_API UTPSSoundComponent : public UActorComponent

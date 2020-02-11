@@ -7,8 +7,7 @@
 #include "SpawningArmor.h"
 #include "TPSCharacterStatComponent.generated.h"
 
-
-//DECLARE_MULTICAST_DELEGATE(FCharHPUpdateDeleate);
+//플레이어의 스탯을 관리하는 컴포넌트 (HP, 체감온도, 무기파워,스킬파워)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPJ1011_API UTPSCharacterStatComponent : public UActorComponent
@@ -46,30 +45,27 @@ public:
 	float WarmProperty = 5.0f; //5초당 불에 있으면 체감온도 5도씩 올라감
 
 	UFUNCTION(BlueprintCallable)
-	void CallCold();
+	void CallCold(); // 추위 시작 (온도감소 타이머 시작)
 	UFUNCTION(BlueprintCallable)
-	void CallWarm();
+	void CallWarm(); // 따뜻함 시작 (온도증가 타이머 시작)
 	UFUNCTION(BlueprintCallable)
-	void ClearCold();
+	void ClearCold(); // 추위 중지
 	UFUNCTION(BlueprintCallable)
-	void ClearWarm();
+	void ClearWarm(); // 따뜻함 중지
 	FTimerHandle ColdTimer;
 	FTimerHandle WarmTimer;
 
 	UFUNCTION()
-	void SetDamage(float Damage);
+	void SetDamage(float Damage); // 데미지 입는 함수.
 	UFUNCTION()
-	void SetColdDamage();
+	void SetColdDamage();// 온도감소함수(타이머로 실행)
 	UFUNCTION()
-	void SetWarm();
+	void SetWarm();// 온도증가함수(타이머로 실행)
 	UFUNCTION(BlueprintCallable)
-	float GetHPRatio();
+	float GetHPRatio();// HP비율 리턴함수
 
 	class ATPSCharacter* TempTPSCharacter;
 
-	void SetEquipmentAbility();
+	void SetEquipmentAbility();// 장비능력치 적용함수
 
-
-	//델리게이트
-	//FCharHPUpdateDeleate CharHPUpdateDeleate;	
 };

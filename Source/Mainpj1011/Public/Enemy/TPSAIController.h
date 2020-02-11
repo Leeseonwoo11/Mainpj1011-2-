@@ -30,7 +30,7 @@ protected:
 public:
 	ATPSAIController();
 	virtual void OnPossess(APawn* InPawn) override;
-
+	//블랙보드 값들
 	static const FName TargetLocation;
 	static const FName MoveLocation;
 	static const FName CanSeePlayer;
@@ -43,13 +43,13 @@ public:
 
 	UFUNCTION()
 	UBlackboardComponent* GetBlackboard();
-
+	//AIController가 움직이고있는 TPSEnemy
 	ATPSEnemy* ControllingEnemy;
 
 public:
 	UPROPERTY()
-		class UBehaviorTree* BTAsset;
+	class UBehaviorTree* BTAsset;
 	UPROPERTY()
-		class UBlackboardData* BBAsset;
+	class UBlackboardData* BBAsset;
 
 };

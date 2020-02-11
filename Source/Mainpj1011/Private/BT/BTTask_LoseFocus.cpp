@@ -4,7 +4,7 @@
 #include "BTTask_LoseFocus.h"
 #include "TPSAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-
+// AI가 플레이어를 놓치는 시선을 돌리는 역할을 수행하는 BTTask.
 UBTTask_LoseFocus::UBTTask_LoseFocus()
 {
 	NodeName = TEXT("LoseFocus");

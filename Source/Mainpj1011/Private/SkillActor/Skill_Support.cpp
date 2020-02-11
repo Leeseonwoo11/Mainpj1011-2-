@@ -47,7 +47,7 @@ void ASkill_Support::BeginPlay()
 	SkillRange->SetWorldScale3D(SkillRangeVector*4.0f);
 	this->SetLifeSpan(10.0f);
 	Cooltime = 10.0f;
-	SoundComp->SupportSound->Play();
+	SoundComp->SupportSound->Play(); //힐링 소리 플레이
 
 }
 void ASkill_Support::Tick(float DeltaTime)

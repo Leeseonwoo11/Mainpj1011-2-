@@ -27,7 +27,7 @@ void AEncounterspace::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEncounterspace::CallOutTarget(FVector TargetLoc)
+void AEncounterspace::CallOutTarget(FVector TargetLoc)// 타겟불러오기
 {
 	TargetLocation = TargetLoc;
 	TSubclassOf<ATPSEnemy> TPSEnemy;

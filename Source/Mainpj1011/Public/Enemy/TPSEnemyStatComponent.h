@@ -25,6 +25,8 @@ protected:
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Health = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHealth = 100.0f;
 	UFUNCTION(BlueprintCallable)
 	void SetDamage(float NewDamage);
 	UFUNCTION()

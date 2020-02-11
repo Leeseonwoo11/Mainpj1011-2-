@@ -8,6 +8,7 @@
 #include "SpawningWeapon.h"
 #include "EquipmentComponent.generated.h"
 
+//장비하고있는 아이템을 관리하는 컴포넌트이다.
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MAINPJ1011_API UEquipmentComponent : public UActorComponent
@@ -45,9 +46,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FArmorPropertyStruct EquipFoots;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)	//방어구 착용함수
 	void WearingArmor(FArmorPropertyStruct NewArmor);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)	//무기 착용함수.
 	void MountingWeapon(FWeaponPropertyStruct NewWeapon);
 
 

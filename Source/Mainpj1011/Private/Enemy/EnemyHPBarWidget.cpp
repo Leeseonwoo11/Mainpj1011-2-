@@ -21,7 +21,7 @@ void UEnemyHPBarWidget::BindEnemyHP(UTPSEnemyStatComponent* NewStatComponent)
 void UEnemyHPBarWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	HPProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("ProgressBar_92")));
+	HPProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("ProgressBar_92"))); //미리 만든 블루프린트 위젯의 ProgresBar이름이 ProgressBar_92이므로 캐스트 해준다.
 	if (HPProgressBar == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Progressbar is nullptr"));
@@ -36,7 +36,7 @@ void UEnemyHPBarWidget::UpdateHPWidget()
 	{
 		if (HPProgressBar != nullptr)
 		{
-			HPProgressBar->SetPercent(CurrentStatComponent->GetHPRatio());
+			HPProgressBar->SetPercent(CurrentStatComponent->GetHPRatio()); //프로그래스 바에 HP비율을 설정한다.
 			UE_LOG(LogTemp, Error, TEXT("HPRatio = %f"), CurrentStatComponent->GetHPRatio());
 		}
 	}

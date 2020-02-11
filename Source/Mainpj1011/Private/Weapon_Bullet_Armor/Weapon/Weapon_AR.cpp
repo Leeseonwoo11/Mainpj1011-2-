@@ -12,17 +12,17 @@ AWeapon_AR::AWeapon_AR()
 		WeaponBody->SetSkeletalMesh(SK_BODY.Object);
 	}
 
-	WeaponBody->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
-	WeaponType = EWeaponType::AR;
-	FirePos->SetRelativeLocation(FVector(0.0f, 75.0f, 13.0f));
-	FirePos->SetRelativeRotation(FRotator(0, 90, 0));
+	WeaponBody->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f)); // 무기 메시의 스케일 1,1,1
+	WeaponType = EWeaponType::AR; // 무기의 타입설정
+	FirePos->SetRelativeLocation(FVector(0.0f, 75.0f, 13.0f));// 총알발사위치 재설정
+	FirePos->SetRelativeRotation(FRotator(0, 90, 0)); //  총알 발사 위치 회전값 재설정
 }
 
 void AWeapon_AR::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	TableManager* TableMgr = TableManager::GetInstance();
+	TableManager* TableMgr = TableManager::GetInstance(); // 테이블매니져에서 무기 각각의 속성값을 받아서 지정해준다.
 	Damage = TableMgr->GetWeaponDamage(WeaponType);
 	RPM = TableMgr->GetWeaponRPM(WeaponType);
 	AMMO = TableMgr->GetWeaponAMMO(WeaponType);

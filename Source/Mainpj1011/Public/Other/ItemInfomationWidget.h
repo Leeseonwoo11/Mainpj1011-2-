@@ -9,6 +9,8 @@
 /**
  * 
  */
+// 아이템 정보를 표시해주는 위젯
+// 아이템의 이름 등급을 표시한다.
 UCLASS()
 class MAINPJ1011_API UItemInfomationWidget : public UUserWidget
 {
